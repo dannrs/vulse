@@ -1,18 +1,8 @@
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
+import * as schema from "~/server/db/schema";
 
-import { env } from "~/env";
-import * as schema from "./schema";
-
-/**
- * Cache the database connection in development. This avoids creating a new connection on every HMR
- * update.
- */
-const globalForDb = globalThis as unknown as {
-  conn: postgres.Sql | undefined;
-};
-
-const conn = globalForDb.conn ?? postgres(env.DATABASE_URL);
-if (env.NODE_ENV !== "production") globalForDb.conn = conn;
-
-export const db = drizzle(conn, { schema });
+// Redefining generic fixes a type error. Fix coming soon:
+// https://github.com/drizzle-team/drizzle-orm/issues/1945#event-12152755813
+const sql = neon<boolean, boolean>(process.env.DATABASE_URL!);
+export const db = drizzle(sql, { schema });
