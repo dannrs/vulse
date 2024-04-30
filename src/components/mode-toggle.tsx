@@ -23,7 +23,7 @@ const ModeToggle = () => {
 
 
   return (
-    <Button variant='ghost' size='sm' onClick={toggleTheme}>
+    <Button variant='ghost' size='xs' onClick={toggleTheme}>
       {resolvedTheme === 'dark' ? (
         <Moon className='h-4 w-4' />
       ) : (
