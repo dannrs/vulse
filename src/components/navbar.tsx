@@ -18,10 +18,11 @@ export default function Navbar() {
           <Link href='/'>Link5</Link>
         </div> */}
         <div className='hidden items-center space-x-4 sm:flex'>
-          <ModeToggle />
-          <Button size='xs'>
-            <span className='ml-1'>Sign in</span>
-            <ChevronRight className='ml-1 mt-0.5 h-4 w-4' />
+          <Button variant='link' size='xs'>
+            Sign in
+          </Button>
+          <Button size='sm'>
+            Get started
           </Button>
         </div>
       </nav>
