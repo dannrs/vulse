@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm';
 import {
   index,
   pgTableCreator,
@@ -22,7 +23,6 @@ export const users = pgTable(
     name: varchar('name'),
     description: varchar('description'),
     email: varchar('email').unique(),
-    profilePicture: varchar('profile_picture'),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { mode: 'date' }).$onUpdate(
       () => new Date()
@@ -34,6 +34,11 @@ export const users = pgTable(
     spotifyIndex: index('user_spotify_idx').on(t.spotifyId),
   })
 );
+
+export const userRelations = relations(users, ({ one }) => ({
+  profilePicture: one(profilePicture),
+  oauthAccount: one(oauthAccount),
+}))
 
 export const profilePicture = pgTable(
   'profile_picture',

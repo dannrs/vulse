@@ -1,13 +1,12 @@
 import { type UserProfile as SpotifyUser } from '@spotify/web-api-ts-sdk';
 import { OAuth2RequestError } from 'arctic';
-import { eq } from 'drizzle-orm';
 import { generateId } from 'lucia';
 import { cookies } from 'next/headers';
 import { type NextRequest } from 'next/server';
 import { lucia, spotify } from '~/lib/auth';
 import { Paths } from '~/lib/constants';
 import { db } from '~/server/db';
-import { users } from '~/server/db/schema';
+import { oauthAccount, profilePicture, users } from '~/server/db/schema';
 
 export async function GET(req: NextRequest): Promise<Response> {
   const url = new URL(req.url);
@@ -41,7 +40,7 @@ export async function GET(req: NextRequest): Promise<Response> {
         ),
     });
 
-    const profilePicture = spotifyUser.images.find(
+    const profilePictureUrl = spotifyUser.images.find(
       (image) => image.width === 300
     )?.url
       ? spotifyUser.images[0]?.url
@@ -54,8 +53,28 @@ export async function GET(req: NextRequest): Promise<Response> {
         spotifyId: spotifyUser.id,
         name: spotifyUser.display_name,
         email: spotifyUser.email,
-        profilePicture,
       });
+
+      if (profilePictureUrl) {
+        await db.insert(profilePicture).values({
+          id: generateId(21),
+          url: profilePictureUrl,
+          userId,
+        });
+      }
+
+      await db
+          .insert(oauthAccount)
+          .values({
+            id: generateId(15),
+            provider: "github",
+            providerUserId: spotifyUser.id,
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+            expiresAt: tokens.accessTokenExpiresAt,
+            userId,
+          })
+      
       const session = await lucia.createSession(userId, {});
       const sessionCookie = lucia.createSessionCookie(session.id);
       cookies().set(
@@ -69,18 +88,18 @@ export async function GET(req: NextRequest): Promise<Response> {
       });
     }
 
-    if (
-      existingUser.spotifyId !== spotifyUser.id ||
-      existingUser.profilePicture !== profilePicture
-    ) {
-      await db
-        .update(users)
-        .set({
-          spotifyId: spotifyUser.id,
-          profilePicture,
-        })
-        .where(eq(users.id, existingUser.id));
-    }
+    // if (
+    //   existingUser.spotifyId !== spotifyUser.id ||
+    //   existingUser.profilePicture !== profilePictureUrl
+    // ) {
+    //   await db
+    //     .update(users)
+    //     .set({
+    //       spotifyId: spotifyUser.id,
+    //       profilePicture: profilePictureUrl,
+    //     })
+    //     .where(eq(users.id, existingUser.id));
+    // }
     const session = await lucia.createSession(existingUser.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
     cookies().set(
