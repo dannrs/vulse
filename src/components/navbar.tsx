@@ -1,7 +1,5 @@
 import Link from 'next/link';
-import ModeToggle from '~/components/mode-toggle';
 import { Button } from '~/components/ui/button';
-import { ChevronRight } from 'lucide-react';
 
 export default function Navbar() {
   return (

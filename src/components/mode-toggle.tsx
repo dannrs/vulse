@@ -1,6 +1,6 @@
 'use client';
 
-import { Computer, ComputerIcon, Moon, Sun } from 'lucide-react';
+import { Computer, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import { useEffect, useState } from 'react';
