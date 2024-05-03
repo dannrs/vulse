@@ -6,9 +6,10 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { initTRPC } from '@trpc/server';
+import { TRPCError, initTRPC } from '@trpc/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
+import { uncachedValidateRequest } from '~/lib/auth/validate-request';
 
 import { db } from '~/server/db';
 
@@ -25,7 +26,10 @@ import { db } from '~/server/db';
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
+  const { session, user } = await uncachedValidateRequest();
   return {
+    session,
+    user,
     db,
     ...opts,
   };
@@ -81,3 +85,22 @@ export const createTRPCRouter = t.router;
  * are logged in.
  */
 export const publicProcedure = t.procedure;
+
+export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
+  if (!ctx.session || !ctx.user) {
+    throw new TRPCError({ code: 'UNAUTHORIZED' });
+  }
+
+  return next({
+    ctx: {
+      session: { ...ctx.session },
+      user: { ...ctx.user },
+    },
+  });
+});
+
+export type TRPCContext = Awaited<ReturnType<typeof createTRPCContext>>;
+export type ProtectedTRPCContext = TRPCContext & {
+  user: NonNullable<TRPCContext['user']>;
+  session: NonNullable<TRPCContext['session']>;
+};

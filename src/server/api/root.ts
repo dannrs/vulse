@@ -1,4 +1,6 @@
 import { createCallerFactory, createTRPCRouter } from '~/server/api/trpc';
+import { userRouter } from './routers/user/user.procedure';
+import { spotifyRouter } from './routers/spotify/spotify.procedure';
 
 /**
  * This is the primary router for your server.
@@ -6,6 +8,8 @@ import { createCallerFactory, createTRPCRouter } from '~/server/api/trpc';
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
+  user: userRouter,
+  spotify: spotifyRouter,
 });
 
 // export type definition of API
