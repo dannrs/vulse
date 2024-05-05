@@ -3,10 +3,11 @@ import { db } from '~/server/db';
 import { spotify } from './auth';
 import { oauthAccount } from '~/server/db/schema';
 import { eq } from 'drizzle-orm';
-
-const client_id = process.env.SPOTIFY_CLIENT_ID!;
+import { env } from '~/env';
 
 export async function getSpotifyApi(userId: string) {
+  const client_id = env.SPOTIFY_CLIENT_ID;
+
   // Retrieve tokens from the database
   const tokens = await db.query.oauthAccount.findFirst({
     where: (table, { eq }) => eq(table.userId, userId),
@@ -14,12 +15,12 @@ export async function getSpotifyApi(userId: string) {
   console.log('access token:', tokens?.accessToken);
   console.log('access token expiredat:', tokens?.expiresAt?.toLocaleString());
 
-  const isTokenExpired = tokens?.expiresAt && tokens.expiresAt < new Date()
+  const isTokenExpired = tokens?.expiresAt && tokens.expiresAt < new Date(Date.now());
   console.log(isTokenExpired)
   if (isTokenExpired) {
     // Use the refresh token to obtain a new access token
     const refreshedTokens = await spotify.refreshAccessToken(
-      tokens?.refreshToken ?? ''
+      tokens.refreshToken ?? ''
     );
     console.log('refreshed token:', refreshedTokens.accessToken);
     console.log(
@@ -35,15 +36,7 @@ export async function getSpotifyApi(userId: string) {
         expiresAt: refreshedTokens.accessTokenExpiresAt,
       })
       .where(eq(oauthAccount.userId, userId));
-    //   await db.Vupdate({
-    //     where: { userId: userId },
-    //     data: {
-
-    //       accessToken: refreshedTokens.accessToken,
-    //       refreshToken: refreshedTokens.refreshToken, // Update refresh token if it has changed
-    //     },
-    //   });
-
+    
     // Create AccessToken object with new token
     const accessToken: AccessToken = {
       access_token: refreshedTokens.accessToken,
