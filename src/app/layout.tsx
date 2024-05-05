@@ -1,11 +1,9 @@
 import '~/styles/globals.css';
 
 import { Inter } from 'next/font/google';
-
-import { TRPCReactProvider } from '~/trpc/react';
 import { ThemeProvider } from '~/components/theme-provider';
-import Navbar from '~/components/navbar';
-import Footer from '~/components/footer';
+import { TRPCReactProvider } from '~/trpc/react';
+import { cn } from '~/lib/utils';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -25,19 +23,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <body className={`font-sans ${inter.variable}`}>
-        <TRPCReactProvider>
-          <ThemeProvider
-            attribute='class'
-            defaultTheme='system'
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
-          </ThemeProvider>
-        </TRPCReactProvider>
+      <body
+        className={cn(
+          'min-h-screen bg-background font-sans antialiased',
+          inter.variable
+        )}
+      >
+        <ThemeProvider
+          attribute='class'
+          defaultTheme='system'
+          enableSystem
+          disableTransitionOnChange
+        >
+          <TRPCReactProvider>{children}</TRPCReactProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
