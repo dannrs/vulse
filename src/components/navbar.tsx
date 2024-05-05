@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button, buttonVariants } from '~/components/ui/button';
+import { Button } from '~/components/ui/button';
 import { validateRequest } from '~/lib/auth/validate-request';
 import UserButton from './user-button';
 
@@ -24,11 +24,15 @@ export default async function Navbar() {
           {user ? (
             <UserButton />
           ) : (
-            <Link href='/auth/login' className={buttonVariants({ size: 'xs', variant: 'link' })}>
-              Sign in
-            </Link>
+            <Button size='xs' variant='link' asChild>
+              <Link href='/auth/login'>Sign in</Link>
+            </Button>
           )}
-          {!user && <Button size='sm'>Get started</Button>}
+          {!user && (
+            <Button size='sm' asChild>
+              <Link href='/auth/signup'>Get started</Link>
+            </Button>
+          )}
         </div>
       </nav>
     </div>

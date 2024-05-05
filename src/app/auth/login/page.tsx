@@ -1,8 +1,14 @@
-export default async function Page() {
+import { redirect } from "next/navigation";
+import { Login } from "./login";
+import { Paths } from "~/lib/constants";
+import { validateRequest } from "~/lib/auth/validate-request";
+
+export default async function LoginPage() {
+  const { user } = await validateRequest();
+
+  if (user) redirect(Paths.Dashboard);
+
   return (
-    <>
-      <h1>Sign in</h1>
-      <a href='/auth/login/spotify'>Sign in with Spotify</a>
-    </>
+    <Login />
   );
 }
