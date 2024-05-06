@@ -1,9 +1,11 @@
 import '~/styles/globals.css';
 
 import { Inter } from 'next/font/google';
+import { SessionProvider } from '~/components/session-provider';
 import { ThemeProvider } from '~/components/theme-provider';
-import { TRPCReactProvider } from '~/trpc/react';
+import { validateRequest } from '~/lib/auth/validate-request';
 import { cn } from '~/lib/utils';
+import { TRPCReactProvider } from '~/trpc/react';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -16,11 +18,13 @@ export const metadata = {
   icons: [{ rel: 'icon', url: '/favicon.ico' }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const sessionData = await validateRequest();
+
   return (
     <html lang='en'>
       <body
@@ -35,7 +39,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <TRPCReactProvider>{children}</TRPCReactProvider>
+          <SessionProvider value={sessionData}>
+            <TRPCReactProvider>{children}</TRPCReactProvider>
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>
