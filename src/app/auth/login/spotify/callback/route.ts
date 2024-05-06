@@ -2,7 +2,7 @@ import { type UserProfile as SpotifyUser } from '@spotify/web-api-ts-sdk';
 import { OAuth2RequestError } from 'arctic';
 import { generateId } from 'lucia';
 import { cookies } from 'next/headers';
-import { type NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { lucia, spotify } from '~/lib/auth';
 import { Paths } from '~/lib/constants';
 import { db } from '~/server/db';
@@ -40,11 +40,9 @@ export async function GET(req: NextRequest): Promise<Response> {
         ),
     });
 
-    const profilePictureUrl = spotifyUser.images.find(
-      (image) => image.width === 300
-    )?.url
-      ? spotifyUser.images[0]?.url
-      : null;
+    const profilePictureUrl =
+      spotifyUser.images.find((image) => image.width === 300)?.url ??
+      spotifyUser.images[0]?.url;
 
     if (!existingUser) {
       const userId = generateId(21);
@@ -53,6 +51,7 @@ export async function GET(req: NextRequest): Promise<Response> {
         spotifyId: spotifyUser.id,
         name: spotifyUser.display_name,
         email: spotifyUser.email,
+        slug: spotifyUser.id,
       });
 
       if (profilePictureUrl) {
@@ -63,18 +62,16 @@ export async function GET(req: NextRequest): Promise<Response> {
         });
       }
 
-      await db
-          .insert(oauthAccount)
-          .values({
-            id: generateId(15),
-            provider: "github",
-            providerUserId: spotifyUser.id,
-            accessToken: tokens.accessToken,
-            refreshToken: tokens.refreshToken,
-            expiresAt: tokens.accessTokenExpiresAt,
-            userId,
-          })
-      
+      await db.insert(oauthAccount).values({
+        id: generateId(15),
+        provider: 'github',
+        providerUserId: spotifyUser.id,
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+        expiresAt: tokens.accessTokenExpiresAt,
+        userId,
+      });
+
       const session = await lucia.createSession(userId, {});
       const sessionCookie = lucia.createSessionCookie(session.id);
       cookies().set(
@@ -82,24 +79,12 @@ export async function GET(req: NextRequest): Promise<Response> {
         sessionCookie.value,
         sessionCookie.attributes
       );
-      return new Response(null, {
+      return new NextResponse(null, {
         status: 302,
-        headers: { Location: Paths.Dashboard },
+        headers: { Location: `/${spotifyUser.id}`},
       });
     }
 
-    // if (
-    //   existingUser.spotifyId !== spotifyUser.id ||
-    //   existingUser.profilePicture !== profilePictureUrl
-    // ) {
-    //   await db
-    //     .update(users)
-    //     .set({
-    //       spotifyId: spotifyUser.id,
-    //       profilePicture: profilePictureUrl,
-    //     })
-    //     .where(eq(users.id, existingUser.id));
-    // }
     const session = await lucia.createSession(existingUser.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
     cookies().set(
@@ -107,21 +92,27 @@ export async function GET(req: NextRequest): Promise<Response> {
       sessionCookie.value,
       sessionCookie.attributes
     );
-    return new Response(null, {
+    return new NextResponse(null, {
       status: 302,
-      headers: { Location: Paths.Dashboard },
+      headers: { Location: `/${existingUser.slug}` },
     });
   } catch (e) {
     // the specific error message depends on the provider
     if (e instanceof OAuth2RequestError) {
       // invalid code
-      return new Response(JSON.stringify({ message: 'Invalid code' }), {
-        status: 400,
-      });
+      return NextResponse.json(
+        { message: 'Invalid code' },
+        {
+          status: 400,
+        }
+      );
     }
 
-    return new Response(JSON.stringify({ message: 'internal server error' }), {
-      status: 500,
-    });
+    return NextResponse.json(
+      { message: 'internal server error' },
+      {
+        status: 500,
+      }
+    );
   }
 }
