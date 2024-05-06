@@ -6,6 +6,7 @@ import { ThemeProvider } from '~/components/theme-provider';
 import { validateRequest } from '~/lib/auth/validate-request';
 import { cn } from '~/lib/utils';
 import { TRPCReactProvider } from '~/trpc/react';
+import { Toaster } from '~/components/ui/sonner';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -41,6 +42,7 @@ export default async function RootLayout({
         >
           <SessionProvider value={sessionData}>
             <TRPCReactProvider>{children}</TRPCReactProvider>
+            <Toaster />
           </SessionProvider>
         </ThemeProvider>
       </body>

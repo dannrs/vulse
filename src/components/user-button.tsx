@@ -16,7 +16,7 @@ import { logout } from '~/lib/auth/actions';
 import { Button } from './ui/button';
 
 export default function UserButton() {
-  const { data: profile, isLoading } = api.user.get.useQuery();
+  const { data: profile, isLoading } = api.user.getUserById.useQuery();
   const { data: profilePicture } = api.user.getProfilePicture.useQuery();
   if (isLoading) return <Skeleton className='h-8 w-8 rounded-full' />;
   if (!profile) return null;
