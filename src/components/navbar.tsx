@@ -7,8 +7,8 @@ export default async function Navbar() {
   const { user } = await validateRequest();
 
   return (
-    <div className='flex justify-center'>
-      <nav className='sticky inset-x-0 top-0 z-40 flex min-h-16 w-full max-w-5xl items-center justify-between p-3 backdrop-blur-lg transition-all'>
+    <div className='sticky inset-x-0 top-0 z-40 flex h-16 justify-center backdrop-blur-lg transition-all'>
+      <nav className='flex w-full max-w-5xl items-center justify-between p-3 '>
         <Link href='/' className='z-50 flex text-2xl font-bold'>
           Vulse
         </Link>
