@@ -12,6 +12,7 @@ const config = {
         protocol: 'https',
         hostname: '**.scdn.co',
       },
+      { protocol: 'https', hostname: 'utfs.io' }
     ],
   },
 };
