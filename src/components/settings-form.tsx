@@ -117,7 +117,7 @@ export default function SettingsForm() {
 
   return (
     <section className='flex flex-col items-center'>
-      <div className='w-full max-w-5xl'>
+      <div className='max-w-68 w-full'>
         {isLoadingUser ? (
           <div>
             <Skeleton className='mx-auto my-4 h-[150px] w-[150px] rounded-full' />
@@ -143,8 +143,8 @@ export default function SettingsForm() {
                   className='aspect-square rounded-full transition-opacity duration-200 group-hover:opacity-60'
                   onClick={onImageClick}
                 />
-                <p className='absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100 text-[0.8rem] leading-4 font-medium'>
-                  Change profile picture
+                <p className='absolute inset-0 flex items-center justify-center text-sm font-medium opacity-0 transition-opacity duration-200 group-hover:opacity-100'>
+                  Change
                 </p>
                 <Input
                   type='file'

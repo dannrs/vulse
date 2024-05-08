@@ -19,7 +19,8 @@ const config = {
     },
     extend: {
       maxWidth: {
-        '5xl': '68rem',
+        66: '66rem',
+        68: '68rem',
       },
       colors: {
         border: 'hsl(var(--border))',

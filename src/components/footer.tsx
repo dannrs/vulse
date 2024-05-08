@@ -5,8 +5,8 @@ import ModeToggle from './mode-toggle';
 export default function Footer() {
   return (
     <footer className='flex flex-col items-center border-t'>
-      <div className='grid h-52 w-full max-w-5xl grid-cols-4 py-8'>
-        <div className='text-3xl font-bold flex flex-col gap-4'>
+      <div className='max-w-68 grid h-52 w-full grid-cols-4 py-8'>
+        <div className='flex flex-col gap-4 text-3xl font-bold'>
           <div>Vulse</div>
           <div className='flex gap-4 text-xl'>
             <Link href='/'>
@@ -45,11 +45,11 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <div className='flex h-24  w-full max-w-5xl items-center justify-between'>
-          <p className='text-sm text-foreground/80'>
-            © 2024 Vulse. All rights reserved.
-          </p>
-          <ModeToggle />
+      <div className='max-w-68 flex  h-24 w-full items-center justify-between'>
+        <p className='text-sm text-foreground/80'>
+          © 2024 Vulse. All rights reserved.
+        </p>
+        <ModeToggle />
       </div>
     </footer>
   );

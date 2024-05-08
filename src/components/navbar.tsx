@@ -8,7 +8,7 @@ export default async function Navbar() {
 
   return (
     <div className='sticky inset-x-0 top-0 z-40 flex h-16 justify-center backdrop-blur-lg transition-all'>
-      <nav className='flex w-full max-w-5xl items-center justify-between p-3 '>
+      <nav className='max-w-68 flex w-full items-center justify-between p-3 '>
         <Link href='/' className='z-50 flex text-2xl font-bold'>
           Vulse
         </Link>
