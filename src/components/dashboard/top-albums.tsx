@@ -15,7 +15,7 @@ interface Props {
   user: User;
 }
 
-export default function TopTracksSection({ user }: Props) {
+export default function TopAlbumsSection({ user }: Props) {
   const [isGrid, setIsGrid] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -36,7 +36,7 @@ export default function TopTracksSection({ user }: Props) {
   };
 
   const { session } = useSession();
-  const { data, isLoading } = api.spotify.getTopTracks.useQuery({
+  const { data, isLoading } = api.spotify.getTopAlbums.useQuery({
     id: user.id,
   });
 
@@ -46,7 +46,7 @@ export default function TopTracksSection({ user }: Props) {
         <div>
           <h1 className='font-heading text-xl font-semibold'>Top tracks</h1>
           <p className='text-sm text-foreground/80'>
-            {session ? 'Your' : `${user.name}'s`} top tracks from the past 4
+            {session ? 'Your' : `${user.name}'s`} top albums from the past 4
             weeks
           </p>
         </div>
@@ -99,27 +99,28 @@ export default function TopTracksSection({ user }: Props) {
             isGrid ? 'grid grid-cols-5 sm:grid-cols-6 md:grid-cols-7' : 'flex'
           )}
         >
-          {data?.map((track, index) => (
-            <div key={track.id} className='flex flex-col'>
-              <div className='relative h-32 w-32'>
-                <Image
-                  src={track.albumImageUrl ?? ''}
-                  alt={track.title}
-                  fill
-                  sizes='128px'
-                  className='object-cover'
-                />
+          {data &&
+            Object.entries(data).map(([albumName, albumInfo], index) => (
+              <div key={index} className='flex flex-col'>
+                <div className='relative h-32 w-32'>
+                  <Image
+                    src={albumInfo.imageUrl ?? ''}
+                    alt={albumName}
+                    fill
+                    sizes='128px'
+                    className='object-cover'
+                  />
+                </div>
+                <div className='pt-2'>
+                  <p className='line-clamp-2 font-semibold'>
+                    {index + 1}. {albumName}
+                  </p>
+                  <p className='line-clamp-1 text-sm text-foreground/80'>
+                    {albumInfo.artist}
+                  </p>
+                </div>
               </div>
-              <div className='pt-2'>
-                <p className='line-clamp-2 font-semibold'>
-                  {index + 1}. {track.title}
-                </p>
-                <p className='line-clamp-1 text-sm text-foreground/80'>
-                  {track.artist}
-                </p>
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       )}
     </section>

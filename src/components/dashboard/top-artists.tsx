@@ -1,21 +1,21 @@
 'use client';
 
+import { useRef, useState } from 'react';
 import { Button } from '../ui/button';
 import { MdGridOff, MdGridOn } from 'react-icons/md';
-import { useRef, useState } from 'react';
 import { cn } from '~/lib/utils';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, Share } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 import type { User } from 'lucia';
-import { api } from '~/trpc/react';
 import { useSession } from '../session-provider';
+import { api } from '~/trpc/react';
 
 interface Props {
   user: User;
 }
 
-export default function TopTracksSection({ user }: Props) {
+export default function TopArtistsSection({ user }: Props) {
   const [isGrid, setIsGrid] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -36,7 +36,7 @@ export default function TopTracksSection({ user }: Props) {
   };
 
   const { session } = useSession();
-  const { data, isLoading } = api.spotify.getTopTracks.useQuery({
+  const { data, isLoading } = api.spotify.getTopArtists.useQuery({
     id: user.id,
   });
 
@@ -44,9 +44,9 @@ export default function TopTracksSection({ user }: Props) {
     <section className='container flex max-w-66 flex-col'>
       <div className='flex items-center justify-between pb-4'>
         <div>
-          <h1 className='font-heading text-xl font-semibold'>Top tracks</h1>
+          <h1 className='font-heading text-xl font-semibold'>Top Artists</h1>
           <p className='text-sm text-foreground/80'>
-            {session ? 'Your' : `${user.name}'s`} top tracks from the past 4
+            {session ? 'Your' : `${user.name}'s`} top artists from the past 4
             weeks
           </p>
         </div>
@@ -79,49 +79,45 @@ export default function TopTracksSection({ user }: Props) {
           </Button>
         </div>
       </div>
-      {isLoading ? (
-        <div className='flex gap-4 overflow-x-hidden'>
-          {Array.from(new Array(10)).map((_, index: number) => (
-            <div key={index} className='flex flex-col'>
-              <Skeleton className='h-32 w-32' />
-              <div className='space-y-2'>
-                <Skeleton className='mb-1 mt-2 h-5 w-32' />
-                <Skeleton className='h-5 w-32' />
+      <div
+        ref={scrollContainerRef}
+        className={cn(
+          'gap-4 overflow-x-hidden',
+          isGrid ? 'grid grid-cols-5 sm:grid-cols-6 md:grid-cols-7' : 'flex'
+        )}
+      >
+        {isLoading ? (
+          <>
+            {Array.from(new Array(10)).map((_, index: number) => (
+              <div key={index} className='flex flex-col'>
+                <Skeleton className='h-32 w-32 rounded-full' />
+                <Skeleton className='mt-2 h-5 w-32' />
               </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div
-          ref={scrollContainerRef}
-          className={cn(
-            'gap-4 overflow-x-hidden',
-            isGrid ? 'grid grid-cols-5 sm:grid-cols-6 md:grid-cols-7' : 'flex'
-          )}
-        >
-          {data?.map((track, index) => (
-            <div key={track.id} className='flex flex-col'>
-              <div className='relative h-32 w-32'>
-                <Image
-                  src={track.albumImageUrl ?? ''}
-                  alt={track.title}
-                  fill
-                  sizes='128px'
-                  className='object-cover'
-                />
+            ))}
+          </>
+        ) : (
+          <>
+            {data?.map((artist, index) => (
+              <div key={artist.id} className='flex flex-col'>
+                <div className='relative h-32 w-32'>
+                  <Image
+                    src={artist.imageUrl ?? ''}
+                    alt={artist.name}
+                    fill
+                    sizes='128px'
+                    className='rounded-full object-cover'
+                  />
+                </div>
+                <div className='pt-2'>
+                  <p className='text-center font-semibold'>
+                    {index + 1}. {artist.name}
+                  </p>
+                </div>
               </div>
-              <div className='pt-2'>
-                <p className='line-clamp-2 font-semibold'>
-                  {index + 1}. {track.title}
-                </p>
-                <p className='line-clamp-1 text-sm text-foreground/80'>
-                  {track.artist}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </>
+        )}
+      </div>
     </section>
   );
 }
