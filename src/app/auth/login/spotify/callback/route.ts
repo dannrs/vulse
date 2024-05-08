@@ -49,6 +49,7 @@ export async function GET(req: NextRequest): Promise<Response> {
       await db.insert(users).values({
         id: userId,
         spotifyId: spotifyUser.id,
+        spotifyUrl: spotifyUser.external_urls.spotify,
         name: spotifyUser.display_name,
         email: spotifyUser.email,
         slug: spotifyUser.id,

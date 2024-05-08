@@ -13,18 +13,7 @@ import { absoluteUrl } from '../utils';
 const adapter = new DrizzlePostgreSQLAdapter(db, sessions, users);
 
 export const lucia = new Lucia(adapter, {
-  getUserAttributes: (attributes) => {
-    return {
-      id: attributes.id,
-      spotifyId: attributes.spotifyId,
-      name: attributes.name,
-      description: attributes.description,
-      email: attributes.email,
-      createdAt: attributes.createdAt,
-      updatedAt: attributes.updatedAt,
-      slug: attributes.slug,
-    };
-  },
+  getUserAttributes: (attributes) => attributes,
   sessionCookie: {
     name: 'session',
     expires: false,

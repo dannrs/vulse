@@ -20,6 +20,7 @@ export const users = pgTable(
   {
     id: varchar('id', { length: 21 }).primaryKey(),
     spotifyId: varchar('spotify_id').unique(),
+    spotifyUrl: varchar('spotify_url'),
     name: varchar('name'),
     description: varchar('description'),
     email: varchar('email').unique(),
