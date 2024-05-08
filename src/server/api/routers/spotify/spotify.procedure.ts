@@ -21,7 +21,7 @@ export const spotifyRouter = createTRPCRouter({
       });
     }),
   getTopTracks: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string(), period: z.enum(['short_term', 'medium_term', 'long_term']) }))
     .query(async ({ input }) => {
       const spotify = await getSpotifyApi(input.id);
 
@@ -29,7 +29,7 @@ export const spotifyRouter = createTRPCRouter({
 
       const data = await spotify.currentUser.topItems(
         'tracks',
-        'short_term',
+        input.period,
         50
       );
       const { items } = data;
@@ -47,7 +47,7 @@ export const spotifyRouter = createTRPCRouter({
       return tracks;
     }),
   getTopArtists: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string(), period: z.enum(['short_term', 'medium_term', 'long_term']) }))
     .query(async ({ input }) => {
       const spotify = await getSpotifyApi(input.id);
 
@@ -55,7 +55,7 @@ export const spotifyRouter = createTRPCRouter({
 
       const data = await spotify.currentUser.topItems(
         'artists',
-        'short_term',
+        input.period,
         50
       );
       const { items } = data;
@@ -98,7 +98,7 @@ export const spotifyRouter = createTRPCRouter({
       return tracks;
     }),
   getTopAlbums: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string(), period: z.enum(['short_term', 'medium_term', 'long_term']) }))
     .query(async ({ input }) => {
       const spotify = await getSpotifyApi(input.id);
 
@@ -106,7 +106,7 @@ export const spotifyRouter = createTRPCRouter({
 
       const data = await spotify.currentUser.topItems(
         'tracks',
-        'short_term',
+        input.period,
         50
       );
       const { items } = data;
@@ -115,7 +115,9 @@ export const spotifyRouter = createTRPCRouter({
         (acc, track) => {
           const albumName = track.album.name;
           const albumImage = track.album.images[0]?.url ?? '';
-          const artistName = track.artists.map((artist) => artist.name).join(', ');
+          const artistName = track.artists
+            .map((artist) => artist.name)
+            .join(', ');
 
           if (acc[albumName]) {
             (acc[albumName] as { count: number }).count++;
@@ -128,13 +130,16 @@ export const spotifyRouter = createTRPCRouter({
           }
           return acc;
         },
-        {} as Record<string, { count: number; imageUrl: string, artist: string }>
+        {} as Record<
+          string,
+          { count: number; imageUrl: string; artist: string }
+        >
       );
 
       return albums;
     }),
   getTopGenres: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string(), period: z.enum(['short_term', 'medium_term', 'long_term']) }))
     .query(async ({ input }) => {
       const spotify = await getSpotifyApi(input.id);
 
@@ -142,7 +147,7 @@ export const spotifyRouter = createTRPCRouter({
 
       const data = await spotify.currentUser.topItems(
         'artists',
-        'short_term',
+        input.period,
         50
       );
       const { items } = data;

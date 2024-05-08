@@ -10,12 +10,14 @@ import { Skeleton } from '../ui/skeleton';
 import type { User } from 'lucia';
 import { useSession } from '../session-provider';
 import { api } from '~/trpc/react';
+import { Period } from '~/types';
 
 interface Props {
   user: User;
+  period: Period
 }
 
-export default function TopArtistsSection({ user }: Props) {
+export default function TopArtistsSection({ user, period }: Props) {
   const [isGrid, setIsGrid] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -38,6 +40,7 @@ export default function TopArtistsSection({ user }: Props) {
   const { session } = useSession();
   const { data, isLoading } = api.spotify.getTopArtists.useQuery({
     id: user.id,
+    period,
   });
 
   return (
@@ -46,8 +49,13 @@ export default function TopArtistsSection({ user }: Props) {
         <div>
           <h1 className='font-heading text-xl font-semibold'>Top Artists</h1>
           <p className='text-sm text-foreground/80'>
-            {session ? 'Your' : `${user.name}'s`} top artists from the past 4
-            weeks
+          {period === Period.LONG_TERM
+            ? session
+              ? 'Your'
+              : `${user.name}'s lifetime top artists`
+            : session
+              ? 'Your'
+              : `${user.name}'s top artists from the past ${period === Period.SHORT_TERM ? '4 weeks' : '6 months'}`}
           </p>
         </div>
         <div className='space-x-1'>

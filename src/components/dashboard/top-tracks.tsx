@@ -10,14 +10,17 @@ import { Skeleton } from '../ui/skeleton';
 import type { User } from 'lucia';
 import { api } from '~/trpc/react';
 import { useSession } from '../session-provider';
+import { Period } from '~/types';
 
 interface Props {
   user: User;
+  period: Period
 }
 
-export default function TopTracksSection({ user }: Props) {
+export default function TopTracksSection({ user, period }: Props) {
   const [isGrid, setIsGrid] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  console.log('period from dashboard:', period);
 
   const toggleLayout = () => {
     setIsGrid(!isGrid);
@@ -38,6 +41,7 @@ export default function TopTracksSection({ user }: Props) {
   const { session } = useSession();
   const { data, isLoading } = api.spotify.getTopTracks.useQuery({
     id: user.id,
+    period,
   });
 
   return (
@@ -46,8 +50,13 @@ export default function TopTracksSection({ user }: Props) {
         <div>
           <h1 className='font-heading text-xl font-semibold'>Top tracks</h1>
           <p className='text-sm text-foreground/80'>
-            {session ? 'Your' : `${user.name}'s`} top tracks from the past 4
-            weeks
+          {period === Period.LONG_TERM
+            ? session
+              ? 'Your'
+              : `${user.name}'s lifetime top tracks`
+            : session
+              ? 'Your'
+              : `${user.name}'s top tracks from the past ${period === Period.SHORT_TERM ? '4 weeks' : '6 months'}`}
           </p>
         </div>
         <div className='space-x-1'>
