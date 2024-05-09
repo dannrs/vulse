@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import {
@@ -56,14 +56,19 @@ export default function UserButton() {
           </DropdownMenuItem>
         </Link>
         <DropdownMenuSeparator />
-          <DropdownMenuItem className='px-5'>
-        <form action={logout}>
-          <Button className='flex items-center gap-2 font-normal' size='xs' variant='ghost' type='submit'>
-            <LogOut className='mr-2 h-3.5 w-3.5 text-foreground/70' />
-            Sign out
-          </Button>
-        </form>
-</DropdownMenuItem>
+        <DropdownMenuItem className='px-5'>
+          <form action={logout}>
+            <Button
+              className='flex items-center gap-2 font-normal'
+              size='xs'
+              variant='ghost'
+              type='submit'
+            >
+              <LogOut className='mr-2 h-3.5 w-3.5 text-foreground/70' />
+              Sign out
+            </Button>
+          </form>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

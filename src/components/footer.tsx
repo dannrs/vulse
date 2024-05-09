@@ -4,11 +4,11 @@ import ModeToggle from './mode-toggle';
 
 export default function Footer() {
   return (
-    <footer className='flex flex-col items-center border-t'>
-      <div className='max-w-68 grid h-52 w-full grid-cols-4 py-8'>
+    <footer className='max-w-68 container flex flex-col items-center'>
+      <div className='grid h-52 w-full grid-cols-4 py-8'>
         <div className='flex flex-col gap-4 text-3xl font-bold'>
           <div>Vulse</div>
-          <div className='flex gap-4 text-xl'>
+          <div className='flex gap-2 sm:gap-4 text-xl'>
             <Link href='/'>
               <RiGithubFill />
             </Link>
