@@ -3,19 +3,11 @@
 import { Computer, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
-import { useEffect, useState } from 'react';
 import { Button } from '~/components/ui/button';
 import { cn } from '~/lib/utils';
 
 const ModeToggle = () => {
-  const { resolvedTheme, setTheme } = useTheme();
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) return null;
+  const { setTheme, theme } = useTheme();
 
   const toggleTheme = (theme: string) => {
     setTheme(theme);
@@ -24,11 +16,11 @@ const ModeToggle = () => {
   return (
     <div className='flex rounded-full border p-0.5 gap-1'>
       <Button
-        variant={resolvedTheme === 'light' ? 'default' : 'ghost'}
+        variant={theme === 'light' ? 'default' : 'ghost'}
         size='xs'
         onClick={() => toggleTheme('light')}
         className={cn(
-          `${resolvedTheme === 'light' ? 'bg-accent hover:bg-accent' : 'bg-transparent'}`,
+          `${theme === 'light' ? 'bg-accent hover:bg-accent' : 'bg-transparent'}`,
           'rounded-full text-foreground'
         )}
       >
@@ -36,11 +28,11 @@ const ModeToggle = () => {
         <span className='sr-only'>Toggle light mode</span>
       </Button>
       <Button
-        variant={resolvedTheme === 'system' ? 'default' : 'ghost'}
+        variant={theme === 'system' ? 'default' : 'ghost'}
         size='xs'
         onClick={() => toggleTheme('system')}
         className={cn(
-          `${resolvedTheme === 'system' ? 'bg-accent hover:bg-accent' : 'bg-transparent'}`,
+          `${theme === 'system' ? 'bg-accent hover:bg-accent' : 'bg-transparent'}`,
           'rounded-full text-foreground'
         )}
       >
@@ -49,11 +41,11 @@ const ModeToggle = () => {
       </Button>
 
       <Button
-        variant={resolvedTheme === 'dark' ? 'default' : 'ghost'}
+        variant={theme === 'dark' ? 'default' : 'ghost'}
         size='xs'
-        onClick={() => toggleTheme('system')}
+        onClick={() => toggleTheme('dark')}
         className={cn(
-          `${resolvedTheme === 'dark' ? 'bg-accent hover:bg-accent' : 'bg-transparent'}`,
+          `${theme === 'dark' ? 'bg-accent hover:bg-accent' : 'bg-transparent'}`,
           'rounded-full text-foreground'
         )}
       >
