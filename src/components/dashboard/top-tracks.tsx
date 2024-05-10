@@ -3,18 +3,18 @@
 import { Button } from '../ui/button';
 import { MdGridOff, MdGridOn } from 'react-icons/md';
 import { useRef, useState } from 'react';
-import { cn } from '~/lib/utils';
+import { cn, getSectionDescription } from '~/lib/utils';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, Share } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 import type { User } from 'lucia';
 import { api } from '~/trpc/react';
 import { useSession } from '../session-provider';
-import { Period } from '~/types';
+import type { Period } from '~/types';
 
 interface Props {
   user: User;
-  period: Period
+  period: Period;
 }
 
 export default function TopTracksSection({ user, period }: Props) {
@@ -44,20 +44,19 @@ export default function TopTracksSection({ user, period }: Props) {
     period,
   });
 
+  const topTracksDescription = getSectionDescription({
+    period,
+    session,
+    user,
+    section: 'top tracks',
+  });
+
   return (
     <section className='container flex max-w-66 flex-col'>
       <div className='flex items-center justify-between pb-4'>
         <div>
           <h1 className='font-heading text-xl font-semibold'>Top tracks</h1>
-          <p className='text-sm text-foreground/80'>
-          {period === Period.LONG_TERM
-            ? session
-              ? 'Your'
-              : `${user.name}'s lifetime top tracks`
-            : session
-              ? 'Your'
-              : `${user.name}'s top tracks from the past ${period === Period.SHORT_TERM ? '4 weeks' : '6 months'}`}
-          </p>
+          <p className='text-sm text-foreground/80'>{topTracksDescription}</p>
         </div>
         <div className='space-x-1'>
           <Button onClick={toggleLayout} variant='outline' size='xs'>

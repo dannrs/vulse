@@ -4,7 +4,8 @@ import { api } from '~/trpc/react';
 import { useSession } from '../session-provider';
 import { Skeleton } from '../ui/skeleton';
 import type { User } from 'lucia';
-import { Period } from '~/types';
+import type { Period } from '~/types';
+import { getSectionDescription } from '~/lib/utils';
 
 interface Props {
   user: User;
@@ -18,19 +19,18 @@ export default function TopGenresSection({ user, period }: Props) {
     period,
   });
 
+  const topGenresDescription = getSectionDescription({
+    period,
+    session,
+    user,
+    section: 'top genres',
+  });
+
   return (
     <section className='container flex max-w-66 flex-col'>
       <div className='flex flex-col pb-4'>
         <h1 className='font-heading text-xl font-semibold'>Top genres</h1>
-        <p className='text-sm text-foreground/80'>
-          {period === Period.LONG_TERM
-            ? session
-              ? 'Your'
-              : `${user.name}'s lifetime top genres`
-            : session
-              ? 'Your'
-              : `${user.name}'s top genres from the past ${period === Period.SHORT_TERM ? '4 weeks' : '6 months'}`}
-        </p>
+        <p className='text-sm text-foreground/80'>{topGenresDescription}</p>
       </div>
       {isLoading ? (
         <ul className='flex w-full flex-wrap justify-between gap-2'>
