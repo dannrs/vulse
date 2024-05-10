@@ -26,12 +26,12 @@ export default function RecentlyPlayedSection({ user }: Props) {
   return (
     <section className='container flex max-w-66 flex-col'>
       <div className='flex justify-between pb-2'>
-        <div>
+        <div className='w-[85%]'>
           <h1 className='font-heading text-xl font-semibold'>Recent streams</h1>
-          <p className='text-sm text-foreground/80'>
-            {session ? 'Your' : `${user.name}'s`} recently played tracks
-          </p>
+          <p className='max-w-[30ch] sm:max-w-[80%] lg:max-w-[95%] text-sm text-foreground/80 truncate'>
+            {session ? 'Your' : `${user.name}'s`} recently played tracks</p>
         </div>
+        <div className='w-[15%] flex justify-end'>
         {data && data.length > 10 && (
           <Button
             onClick={() => setShowAll(!showAll)}
@@ -42,6 +42,7 @@ export default function RecentlyPlayedSection({ user }: Props) {
             {showAll ? 'Show less' : 'Show more'}
           </Button>
         )}
+</div>
       </div>
       <div className='flex flex-col gap-4'>
         {isLoading ? (
@@ -70,7 +71,7 @@ export default function RecentlyPlayedSection({ user }: Props) {
                   height={64}
                 />
                 <div className='flex w-full items-center justify-between'>
-                  <div className='max-w-[13rem] sm:max-w-full'>
+                  <div className='max-w-[25ch] sm:max-w-[40ch] md:max-w-[100ch]'>
                     <p className='truncate font-semibold'>{track.title}</p>
                     <p className='truncate text-sm text-foreground/80'>
                       {track.album}

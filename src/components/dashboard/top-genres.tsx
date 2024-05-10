@@ -30,7 +30,7 @@ export default function TopGenresSection({ user, period }: Props) {
     <section className='container flex max-w-66 flex-col'>
       <div className='flex flex-col pb-4'>
         <h1 className='font-heading text-xl font-semibold'>Top genres</h1>
-        <p className='text-sm text-foreground/80'>{topGenresDescription}</p>
+        <p className='text-sm text-foreground/80 max-w-full truncate'>{topGenresDescription}</p>
       </div>
       {isLoading ? (
         <ul className='flex w-full flex-wrap justify-between gap-2'>

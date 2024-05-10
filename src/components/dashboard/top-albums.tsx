@@ -53,11 +53,11 @@ export default function TopAlbumsSection({ user, period }: Props) {
   return (
     <section className='container flex max-w-66 flex-col'>
       <div className='flex items-center justify-between pb-4'>
-        <div>
+        <div className='w-[85%]'>
           <h1 className='font-heading text-xl font-semibold'>Top albums</h1>
-          <p className='text-sm text-foreground/80'>{topAlbumsDescription}</p>
+          <p className='max-w-[30ch] sm:max-w-[80%] lg:max-w-[95%] text-sm text-foreground/80 truncate'>{topAlbumsDescription} sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss</p>
         </div>
-        <div className='space-x-1'>
+        <div className='space-x-1 w-[15%] flex justify-end'>
           <Button onClick={toggleLayout} variant='outline' size='xs'>
             {isGrid ? (
               <MdGridOff className='h-4 w-4' aria-label='Enable grid layout' />
@@ -103,7 +103,7 @@ export default function TopAlbumsSection({ user, period }: Props) {
           ref={scrollContainerRef}
           className={cn(
             'gap-4 overflow-x-hidden',
-            isGrid ? 'grid grid-cols-5 sm:grid-cols-6 md:grid-cols-7' : 'flex'
+            isGrid ? 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7' : 'flex'
           )}
         >
           {data &&
