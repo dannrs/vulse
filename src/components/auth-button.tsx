@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
+import { Paths } from '~/lib/constants';
 
 export default function AuthButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +23,7 @@ export default function AuthButton() {
           <Link href='/auth/login'>Sign in</Link>
         </Button>
         <Button size='sm' asChild>
-          <Link href='/auth/signup'>Get started</Link>
+          <Link href={Paths.Registration}>Get started</Link>
         </Button>
       </div>
       <div className='sm:hidden'>
@@ -39,7 +40,7 @@ export default function AuthButton() {
                 Sign in
               </DropdownMenuItem>
             </Link>
-            <Link href='/auth/signup'>
+            <Link href={Paths.Registration}>
               <DropdownMenuItem className='flex items-center gap-2 px-6 py-2.5'>
                 Get started
               </DropdownMenuItem>

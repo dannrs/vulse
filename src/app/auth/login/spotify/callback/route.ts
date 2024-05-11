@@ -40,9 +40,20 @@ export async function GET(req: NextRequest): Promise<Response> {
         ),
     });
 
+    const betaUser = await db.query.betaUsers.findFirst({
+      where: (table, { eq }) => eq(table.email, spotifyUser.email),
+    })
+
     const profilePictureUrl =
       spotifyUser.images.find((image) => image.width === 300)?.url ??
       spotifyUser.images[0]?.url;
+
+      if (!betaUser) {
+      return new NextResponse(null, {
+        status: 302,
+        headers: { Location: Paths.Registration},
+      });
+      }
 
     if (!existingUser) {
       const userId = generateId(21);

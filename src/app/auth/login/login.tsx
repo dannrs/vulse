@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from '~/components/ui/card';
-import { APP_TITLE } from '~/lib/constants';
+import { APP_TITLE, Paths } from '~/lib/constants';
 
 export function Login() {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +21,7 @@ export function Login() {
       <CardHeader className='text-center'>
         <CardTitle>{APP_TITLE} Log In</CardTitle>
         <CardDescription>
-          Log in with your Spotify account to continue.
+        Before logging in, please make sure you have <Link href={Paths.Registration} className='font-semibold underline underline-offset-4'>registered here</Link>. Otherwise the application will not work properly.
         </CardDescription>
       </CardHeader>
       <CardContent className='flex flex-col gap-4'>

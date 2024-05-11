@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation";
 import { validateRequest } from "~/lib/auth/validate-request";
-import { Signup } from "./signup";
+import { Registration } from "./registration";
 
-export default async function SignupPage() {
+export default async function RegistrationPage() {
     const { user } = await validateRequest();
   
     if (user) redirect(`/${user.slug}`);
   
-    return <Signup />;
+    return <Registration />;
   }

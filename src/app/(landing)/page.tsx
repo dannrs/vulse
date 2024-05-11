@@ -1,9 +1,11 @@
 import { MoveRight } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import HeaderText from '~/components/header-text';
 import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
+import { Paths } from '~/lib/constants';
 
 export default function Home() {
   return (
@@ -15,14 +17,13 @@ export default function Home() {
             <MoveRight className='ml-1 mt-0.5 h-4 w-4' />
           </Badge>
           <HeaderText />
-          <p className='mb-2 mt-0 max-w-[50ch] text-sm text-foreground/80 sm:max-w-[55ch] md:mb-4 md:mt-2 md:text-lg lg:text-xl'>
+          <p className='mb-2 mt-0 max-w-[50ch] text-sm text-foreground/80 sm:max-w-full md:mb-4 md:mt-2 md:text-lg lg:text-xl'>
             Get instant access to your personalized Spotify data and share it
             with your friends
           </p>
-          <div className='mb-8 flex w-2/3 gap-4 sm:mb-0 sm:w-3/4 md:w-2/3 lg:w-1/2'>
-            <Input placeholder='Enter your email address...' />
-            <Button type='submit'>Join beta</Button>
-          </div>
+          <Button asChild>
+            <Link href={Paths.Registration}>Get started</Link>
+          </Button>
           <div className='mt-0 flex h-[380px] w-screen flex-col items-center justify-center sm:mt-8 sm:h-full sm:w-full'>
             {/* <Image
             src='/hero-gradient.png'
@@ -40,7 +41,7 @@ export default function Home() {
             />
           </div>
         </div>
-        <div className='flex flex-col pt-8 sm:pt-12 gap-12'>
+        <div className='flex flex-col gap-12 pt-8 sm:pt-12'>
           <div>
             <h2 className='font-semibold text-[#CD44D0] md:text-lg'>
               Features
@@ -122,12 +123,12 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className='flex mt-16 mb-8  h-64 w-full flex-col items-center justify-center space-y-2 rounded-xl bg-[#CD44D0]'>
+        <div className='mb-8 mt-16 flex  h-64 w-full flex-col items-center justify-center space-y-2 rounded-xl bg-[#CD44D0]'>
           <h2 className='text-3xl font-semibold'>Vulse is now in beta</h2>
           <p className='text-foreground/80'>
             Be the first to access the Vulse beta!
           </p>
-          <div className='flex w-4/5 sm:w-3/4 md:w-2/3 gap-4 pt-4'>
+          <div className='flex w-4/5 gap-4 pt-4 sm:w-3/4 md:w-2/3'>
             <Input placeholder='Enter your email address...' />
             <Button type='submit'>Join now</Button>
           </div>

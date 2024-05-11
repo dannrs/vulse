@@ -1,4 +1,4 @@
-import { relations } from 'drizzle-orm';
+// import { relations } from 'drizzle-orm';
 import {
   index,
   pgTableCreator,
@@ -36,10 +36,10 @@ export const users = pgTable(
   })
 );
 
-export const userRelations = relations(users, ({ one }) => ({
-  profilePicture: one(profilePicture),
-  oauthAccount: one(oauthAccount),
-}))
+// export const userRelations = relations(users, ({ one }) => ({
+//   profilePicture: one(profilePicture),
+//   oauthAccount: one(oauthAccount),
+// }))
 
 export const profilePicture = pgTable(
   'profile_picture',
@@ -47,6 +47,16 @@ export const profilePicture = pgTable(
     id: varchar('id').primaryKey(), // uploadthing unique key
     url: varchar('url').notNull(),
     userId: varchar('user_id', { length: 21 }).notNull().references(() => users.id),
+  }
+)
+
+export const betaUsers = pgTable(
+  'beta_users',
+  {
+    id: varchar('id').primaryKey(),
+    name: varchar('name').notNull(),
+    email: varchar('email').notNull().unique(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
   }
 )
 
