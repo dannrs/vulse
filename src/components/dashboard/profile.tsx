@@ -24,7 +24,7 @@ const ProfileSection = ({ user }: Props) => {
         <section className='container flex max-w-4xl flex-col justify-center gap-2'>
           <div className='flex h-full w-full items-center gap-8'>
             <Skeleton className='aspect-square h-[150px] w-[150px] rounded-full' />
-            <div className='flex h-[85%] w-full flex-col justify-center gap-4 bg-purple-500'>
+            <div className='flex h-[85%] w-full flex-col justify-center gap-4'>
               <Skeleton className='h-5 w-32' />
               <Skeleton className='h-4 w-3/5' />
               <Skeleton className='h-4 w-4 rounded-full' />

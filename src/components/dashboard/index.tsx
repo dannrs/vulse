@@ -33,7 +33,7 @@ export default function Dashboard({ user }: Props) {
   console.log('selectedPeriod:', selectedPeriod);
 
   return (
-    <div className='my-12 mt-20 space-y-12'>
+    <div className='space-y-12'>
         <ProfileSection user={user} />
       <div className='container max-w-66 mx-auto flex justify-end'>
         <Select value={selectedPeriod} onValueChange={handlePeriodChange}>

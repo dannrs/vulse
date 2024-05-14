@@ -55,7 +55,7 @@ export default function TopAlbumsSection({ user, period }: Props) {
       <div className='flex items-center justify-between pb-4'>
         <div className='w-[85%]'>
           <h1 className='font-heading text-xl font-semibold'>Top albums</h1>
-          <p className='max-w-[30ch] sm:max-w-[80%] lg:max-w-[95%] text-sm text-foreground/80 truncate'>{topAlbumsDescription} sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss</p>
+          <p className='max-w-[30ch] sm:max-w-[80%] lg:max-w-[95%] text-sm text-foreground/80 truncate'>{topAlbumsDescription}</p>
         </div>
         <div className='space-x-1 w-[15%] flex justify-end'>
           <Button onClick={toggleLayout} variant='outline' size='xs'>
