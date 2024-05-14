@@ -18,10 +18,10 @@ export function Login() {
   const [isLoading, setIsLoading] = useState(false);
   return (
     <Card className='w-full max-w-md'>
-      <CardHeader className='text-center'>
-        <CardTitle>{APP_TITLE} Log In</CardTitle>
-        <CardDescription>
-        Before logging in, please make sure you have <Link href={Paths.Registration} className='font-semibold underline underline-offset-4'>registered here</Link>. Otherwise the application will not work properly.
+      <CardHeader className='text-center space-y-2'>
+        <CardTitle>{APP_TITLE} Login</CardTitle>
+        <CardDescription className='bg-accent p-3 rounded-md'>
+        Before logging in, please make sure you have <Link href={Paths.Registration} className='font-semibold underline underline-offset-4'>registered here</Link>.
         </CardDescription>
       </CardHeader>
       <CardContent className='flex flex-col gap-4'>

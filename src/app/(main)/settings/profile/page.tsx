@@ -8,7 +8,7 @@ export default async function SettingsPage() {
     if (!user) redirect(Paths.Login);
 
   return (
-    <div className='mt-12 mb-20'>
+    <div className='mt-8 mb-20 pl-12'>
       <SettingsForm />
     </div>
   );
