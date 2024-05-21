@@ -1,9 +1,10 @@
 // import { relations } from 'drizzle-orm';
 import {
+  boolean,
   index,
   pgTableCreator,
   timestamp,
-  varchar
+  varchar,
 } from 'drizzle-orm/pg-core';
 import { DATABASE_PREFIX as prefix } from '~/lib/constants';
 
@@ -36,50 +37,56 @@ export const users = pgTable(
   })
 );
 
+export const userPrivacySettings = pgTable('user_settings', {
+  id: varchar('id').primaryKey(),
+  userId: varchar('user_id', { length: 21 })
+    .notNull()
+    .references(() => users.id),
+  publicProfile: boolean('public_profile').notNull(),
+});
+
 // export const userRelations = relations(users, ({ one }) => ({
 //   profilePicture: one(profilePicture),
 //   oauthAccount: one(oauthAccount),
 // }))
 
-export const profilePicture = pgTable(
-  'profile_picture',
-  {
-    id: varchar('id').primaryKey(), // uploadthing unique key
-    url: varchar('url').notNull(),
-    userId: varchar('user_id', { length: 21 }).notNull().references(() => users.id),
-  }
-)
-
-export const betaUsers = pgTable(
-  'beta_users',
-  {
-    id: varchar('id').primaryKey(),
-    name: varchar('name').notNull(),
-    email: varchar('email').notNull().unique(),
-    createdAt: timestamp('created_at').defaultNow().notNull(),
-  }
-)
-
-export const oauthAccount = pgTable("oauth_account", {
-  id: varchar("id").primaryKey(),
-  userId: varchar("user_id", { length: 21 })
+export const profilePicture = pgTable('profile_picture', {
+  id: varchar('id').primaryKey(), // uploadthing unique key
+  url: varchar('url').notNull(),
+  userId: varchar('user_id', { length: 21 })
     .notNull()
     .references(() => users.id),
-  provider: varchar("provider").notNull(),
-  providerUserId: varchar("provider_user_id").notNull(),
-  accessToken: varchar("access_token").notNull(),
-  refreshToken: varchar("refresh_token"),
-  expiresAt: timestamp("expires_at", {
+});
+
+export const betaUsers = pgTable('beta_users', {
+  id: varchar('id').primaryKey(),
+  name: varchar('name').notNull(),
+  email: varchar('email').notNull().unique(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export const oauthAccount = pgTable('oauth_account', {
+  id: varchar('id').primaryKey(),
+  userId: varchar('user_id', { length: 21 })
+    .notNull()
+    .references(() => users.id),
+  provider: varchar('provider').notNull(),
+  providerUserId: varchar('provider_user_id').notNull(),
+  accessToken: varchar('access_token').notNull(),
+  refreshToken: varchar('refresh_token'),
+  expiresAt: timestamp('expires_at', {
     withTimezone: true,
-    mode: "date",
+    mode: 'date',
   }),
-})
+});
 
 export const sessions = pgTable(
   'sessions',
   {
     id: varchar('id').primaryKey(),
-    userId: varchar('user_id', { length: 21 }).notNull().references(() => users.id),
+    userId: varchar('user_id', { length: 21 })
+      .notNull()
+      .references(() => users.id),
     expiresAt: timestamp('expires_at', {
       withTimezone: true,
       mode: 'date',

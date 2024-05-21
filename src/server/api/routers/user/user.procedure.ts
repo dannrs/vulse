@@ -1,9 +1,9 @@
 import * as z from 'zod';
 import { db } from '~/server/db';
 import { createTRPCRouter, protectedProcedure } from '../../trpc';
-import { settingsSchema } from '~/lib/validations';
+import { privacySettingsSchema, profileSettingsSchema } from '~/lib/validations';
 import { TRPCError } from '@trpc/server';
-import { users } from '~/server/db/schema';
+import { userPrivacySettings, users } from '~/server/db/schema';
 import { and, eq } from 'drizzle-orm';
 
 export const userRouter = createTRPCRouter({
@@ -16,7 +16,7 @@ export const userRouter = createTRPCRouter({
     });
   }),
   updateUserById: protectedProcedure
-    .input(settingsSchema)
+    .input(profileSettingsSchema)
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.user.id;
       const spotifyId = ctx.user.spotifyId ?? '';
@@ -40,6 +40,25 @@ export const userRouter = createTRPCRouter({
           slug: input.slug,
         })
         .where(and(eq(users.id, userId), eq(users.spotifyId, spotifyId)));
+    }),
+  getUserPrivacySettings: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.user.id;
+
+    return await db.query.userPrivacySettings.findFirst({
+      where: (table, { eq }) => eq(table.userId, userId),
+    });
+  }),
+  updateUserPrivacySettings: protectedProcedure
+    .input(privacySettingsSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.user.id;
+
+      await db
+        .update(userPrivacySettings)
+        .set({
+          publicProfile: input.publicProfile
+        })
+        .where(eq(userPrivacySettings.userId, userId));
     }),
   checkSlugAvailability: protectedProcedure
     .input(z.object({ slug: z.string() }))

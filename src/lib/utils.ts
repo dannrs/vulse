@@ -3,6 +3,9 @@ import type { Session, User } from 'lucia';
 import { twMerge } from 'tailwind-merge';
 import { env } from '~/env';
 import { Period } from '~/types';
+import { TRPCError } from '@trpc/server';
+import { db } from '~/server/db';
+import { type TRPCContext } from '~/server/api/trpc';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -58,4 +61,23 @@ export function getSectionDescription({
       : `${userDescription} ${section} ${periodDescription}`;
 
   return sectionDescription;
+}
+
+// Check if the user profile is private
+export async function getPrivateSpotifyUser(ctx: TRPCContext, userId: string) {
+  const userSettings = await db.query.userPrivacySettings.findFirst({
+    where: (table, { eq }) => eq(table.userId, userId),
+  });
+
+  if (!userSettings) {
+    throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
+  }
+
+  if (userSettings.publicProfile === false && (!ctx.session || !ctx.user)) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: 'This profile is private',
+    });
+  }
+  return userSettings;
 }

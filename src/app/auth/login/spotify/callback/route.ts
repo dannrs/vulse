@@ -6,7 +6,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { lucia, spotify } from '~/lib/auth';
 import { Paths } from '~/lib/constants';
 import { db } from '~/server/db';
-import { oauthAccount, profilePicture, users } from '~/server/db/schema';
+import { oauthAccount, profilePicture, userPrivacySettings, users } from '~/server/db/schema';
 
 export async function GET(req: NextRequest): Promise<Response> {
   const url = new URL(req.url);
@@ -73,6 +73,12 @@ export async function GET(req: NextRequest): Promise<Response> {
           userId,
         });
       }
+
+      await db.insert(userPrivacySettings).values({
+        id: generateId(21),
+        publicProfile: true,
+        userId,
+      })
 
       await db.insert(oauthAccount).values({
         id: generateId(15),

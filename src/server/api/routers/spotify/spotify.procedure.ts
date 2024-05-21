@@ -4,25 +4,51 @@ import { getSpotifyApi } from '~/lib/spotify';
 import { TRPCError } from '@trpc/server';
 import { db } from '~/server/db';
 import type { MaxInt } from '@spotify/web-api-ts-sdk';
+import { getPrivateSpotifyUser } from '~/lib/utils';
 
 export const spotifyRouter = createTRPCRouter({
   getProfile: publicProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ input }) => {
-      return await db.query.users.findFirst({
+    .query(async ({ ctx, input }) => {
+      const user = await db.query.users.findFirst({
         where: (user, { eq }) => eq(user.id, input.id),
       });
+
+      if (!user) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
+      }
+
+      const userPrivacySettings = await db.query.userPrivacySettings.findFirst({
+        where: (table, { eq }) => eq(table.userId, input.id),
+      });
+
+      if (userPrivacySettings?.publicProfile === false && (!ctx.session || !ctx.user)) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'This profile is private',
+        });
+      }
+      return user;
     }),
   getProfilePicture: publicProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ input }) => {
+    .query(async ({ ctx, input }) => {
+      await getPrivateSpotifyUser(ctx, input.id);
+
       return await db.query.profilePicture.findFirst({
         where: (table, { eq }) => eq(table.userId, input.id),
       });
     }),
   getTopTracks: publicProcedure
-    .input(z.object({ id: z.string(), period: z.enum(['short_term', 'medium_term', 'long_term']) }))
-    .query(async ({ input }) => {
+    .input(
+      z.object({
+        id: z.string(),
+        period: z.enum(['short_term', 'medium_term', 'long_term']),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      await getPrivateSpotifyUser(ctx, input.id);
+
       const spotify = await getSpotifyApi(input.id);
 
       if (!spotify) throw new TRPCError({ code: 'UNAUTHORIZED' });
@@ -47,8 +73,15 @@ export const spotifyRouter = createTRPCRouter({
       return tracks;
     }),
   getTopArtists: publicProcedure
-    .input(z.object({ id: z.string(), period: z.enum(['short_term', 'medium_term', 'long_term']) }))
-    .query(async ({ input }) => {
+    .input(
+      z.object({
+        id: z.string(),
+        period: z.enum(['short_term', 'medium_term', 'long_term']),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      await getPrivateSpotifyUser(ctx, input.id);
+
       const spotify = await getSpotifyApi(input.id);
 
       if (!spotify) throw new TRPCError({ code: 'UNAUTHORIZED' });
@@ -73,7 +106,9 @@ export const spotifyRouter = createTRPCRouter({
     }),
   getRecentlyPlayed: publicProcedure
     .input(z.object({ id: z.string(), limit: z.number() }))
-    .query(async ({ input }) => {
+    .query(async ({ ctx, input }) => {
+      await getPrivateSpotifyUser(ctx, input.id);
+
       const spotify = await getSpotifyApi(input.id);
       console.log(input.id);
 
@@ -98,8 +133,15 @@ export const spotifyRouter = createTRPCRouter({
       return tracks;
     }),
   getTopAlbums: publicProcedure
-    .input(z.object({ id: z.string(), period: z.enum(['short_term', 'medium_term', 'long_term']) }))
-    .query(async ({ input }) => {
+    .input(
+      z.object({
+        id: z.string(),
+        period: z.enum(['short_term', 'medium_term', 'long_term']),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      await getPrivateSpotifyUser(ctx, input.id);
+
       const spotify = await getSpotifyApi(input.id);
 
       if (!spotify) throw new TRPCError({ code: 'UNAUTHORIZED' });
@@ -139,8 +181,15 @@ export const spotifyRouter = createTRPCRouter({
       return albums;
     }),
   getTopGenres: publicProcedure
-    .input(z.object({ id: z.string(), period: z.enum(['short_term', 'medium_term', 'long_term']) }))
-    .query(async ({ input }) => {
+    .input(
+      z.object({
+        id: z.string(),
+        period: z.enum(['short_term', 'medium_term', 'long_term']),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      await getPrivateSpotifyUser(ctx, input.id);
+
       const spotify = await getSpotifyApi(input.id);
 
       if (!spotify) throw new TRPCError({ code: 'UNAUTHORIZED' });
