@@ -11,17 +11,16 @@ export default function Sidebar() {
   const links = [
     { href: '/settings/profile', icon: UserRound, label: 'Profile' },
     { href: '/settings/privacy', icon: LockKeyhole, label: 'Privacy' },
-    // Add more links here as needed
   ];
 
   return (
-    <div className='sticky top-24 pt-2'>
+    <div className='sticky top-24 flex flex-col gap-2 pt-2'>
       {links.map(({ href, icon: Icon, label }) => (
         <Link href={href} key={href}>
           <div
             className={cn(
               pathname === href ? 'bg-accent' : '',
-              'flex items-center rounded-md p-2 hover:bg-accent'
+              'flex items-center rounded-sm p-2 hover:bg-accent'
             )}
           >
             <Icon className='mr-2 h-4 w-4' />

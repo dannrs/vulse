@@ -7,7 +7,7 @@ export default function LandingPageLayout({
 }) {
   return (
     <div className='container mx-auto flex max-w-68 items-start justify-between'>
-      <div className='w-60 h-screen'>
+      <div className='h-screen w-52'>
         <Sidebar />
       </div>
       <main className='flex-grow'>{children}</main>

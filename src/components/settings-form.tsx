@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import type * as z from 'zod';
 import { useUploadThing } from '~/lib/uploadthing';
-import { settingsSchema } from '~/lib/validations';
+import { profileSettingsSchema } from '~/lib/validations';
 import { api } from '~/trpc/react';
 import { Button } from './ui/button';
 import {
@@ -50,8 +50,8 @@ export default function SettingsForm() {
     api.user.getUserById.useQuery();
   const { data: profilePicture } = api.user.getProfilePicture.useQuery();
 
-  const form = useForm<z.infer<typeof settingsSchema>>({
-    resolver: zodResolver(settingsSchema),
+  const form = useForm<z.infer<typeof profileSettingsSchema>>({
+    resolver: zodResolver(profileSettingsSchema),
     defaultValues: {
       displayName: '',
       description: '',
@@ -93,7 +93,7 @@ export default function SettingsForm() {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof settingsSchema>) => {
+  const onSubmit = (values: z.infer<typeof profileSettingsSchema>) => {
     updateUser(values);
   };
 
@@ -117,7 +117,7 @@ export default function SettingsForm() {
 
   return (
     <section className='flex flex-col items-center'>
-      <div className='max-w-68 w-full'>
+      <div className='w-full max-w-68'>
         {isLoadingUser ? (
           <div>
             <Skeleton className='mx-auto my-4 h-[150px] w-[150px] rounded-full' />
@@ -134,7 +134,7 @@ export default function SettingsForm() {
         ) : (
           <>
             {profilePicture?.url ? (
-              <div className='group relative mx-auto my-4 h-[150px] w-[150px] cursor-pointer'>
+              <div className='group relative mx-auto my-2 h-[150px] w-[150px] cursor-pointer'>
                 <Image
                   src={profilePicture.url}
                   alt='Profile picture'

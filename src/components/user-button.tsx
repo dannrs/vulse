@@ -49,7 +49,7 @@ export default function UserButton() {
             My page
           </DropdownMenuItem>
         </Link>
-        <Link href='/settings'>
+        <Link href='/settings/profile'>
           <DropdownMenuItem className='flex items-center gap-2 px-6 py-2.5'>
             <Settings className='mr-2 h-4 w-4 text-foreground/70' />
             Settings

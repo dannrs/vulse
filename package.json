@@ -15,12 +15,13 @@
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
     "@lucia-auth/adapter-drizzle": "^1.0.7",
-    "@neondatabase/serverless": "^0.9.1",
+    "@neondatabase/serverless": "^0.9.3",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-switch": "^1.0.3",
     "@react-email/components": "0.0.17",
     "@spotify/web-api-ts-sdk": "^1.2.0",
     "@t3-oss/env-nextjs": "^0.10.1",
@@ -75,5 +76,5 @@
   "ct3aMetadata": {
     "initVersion": "7.32.0"
   },
-  "packageManager": "pnpm@9.0.6"
+  "packageManager": "pnpm@9.1.1"
 }
