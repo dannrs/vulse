@@ -4,6 +4,8 @@ import { spotify } from './auth';
 import { oauthAccount } from '~/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { env } from '~/env';
+import { TRPCContext } from '~/server/api/trpc';
+import { TRPCError } from '@trpc/server';
 
 export async function getSpotifyApi(userId: string) {
   const client_id = env.SPOTIFY_CLIENT_ID;
@@ -15,8 +17,9 @@ export async function getSpotifyApi(userId: string) {
   console.log('access token:', tokens?.accessToken);
   console.log('access token expiredat:', tokens?.expiresAt?.toLocaleString());
 
-  const isTokenExpired = tokens?.expiresAt && tokens.expiresAt < new Date(Date.now());
-  console.log(isTokenExpired)
+  const isTokenExpired =
+    tokens?.expiresAt && tokens.expiresAt < new Date(Date.now());
+  console.log(isTokenExpired);
   if (isTokenExpired) {
     // Use the refresh token to obtain a new access token
     const refreshedTokens = await spotify.refreshAccessToken(
@@ -36,7 +39,7 @@ export async function getSpotifyApi(userId: string) {
         expiresAt: refreshedTokens.accessTokenExpiresAt,
       })
       .where(eq(oauthAccount.userId, userId));
-    
+
     // Create AccessToken object with new token
     const accessToken: AccessToken = {
       access_token: refreshedTokens.accessToken,
@@ -58,4 +61,23 @@ export async function getSpotifyApi(userId: string) {
 
     return SpotifyApi.withAccessToken(client_id, accessToken);
   }
+}
+
+// Check if the user profile is private
+export async function getPrivateSpotifyUser(ctx: TRPCContext, userId: string) {
+  const userSettings = await db.query.userPrivacySettings.findFirst({
+    where: (table, { eq }) => eq(table.userId, userId),
+  });
+
+  if (!userSettings) {
+    throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
+  }
+
+  if (userSettings.publicProfile === false && (!ctx.session || !ctx.user)) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: 'This profile is private',
+    });
+  }
+  return userSettings;
 }

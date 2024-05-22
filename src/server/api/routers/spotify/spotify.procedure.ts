@@ -4,7 +4,7 @@ import { getSpotifyApi } from '~/lib/spotify';
 import { TRPCError } from '@trpc/server';
 import { db } from '~/server/db';
 import type { MaxInt } from '@spotify/web-api-ts-sdk';
-import { getPrivateSpotifyUser } from '~/lib/utils';
+import { getPrivateSpotifyUser } from '~/lib/spotify';
 
 export const spotifyRouter = createTRPCRouter({
   getProfile: publicProcedure
@@ -22,7 +22,10 @@ export const spotifyRouter = createTRPCRouter({
         where: (table, { eq }) => eq(table.userId, input.id),
       });
 
-      if (userPrivacySettings?.publicProfile === false && (!ctx.session || !ctx.user)) {
+      if (
+        userPrivacySettings?.publicProfile === false &&
+        (!ctx.session || !ctx.user)
+      ) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           message: 'This profile is private',

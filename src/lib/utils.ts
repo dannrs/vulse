@@ -62,22 +62,3 @@ export function getSectionDescription({
 
   return sectionDescription;
 }
-
-// Check if the user profile is private
-export async function getPrivateSpotifyUser(ctx: TRPCContext, userId: string) {
-  const userSettings = await db.query.userPrivacySettings.findFirst({
-    where: (table, { eq }) => eq(table.userId, userId),
-  });
-
-  if (!userSettings) {
-    throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
-  }
-
-  if (userSettings.publicProfile === false && (!ctx.session || !ctx.user)) {
-    throw new TRPCError({
-      code: 'FORBIDDEN',
-      message: 'This profile is private',
-    });
-  }
-  return userSettings;
-}
