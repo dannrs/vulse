@@ -6,7 +6,12 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { lucia, spotify } from '~/lib/auth';
 import { Paths } from '~/lib/constants';
 import { db } from '~/server/db';
-import { oauthAccount, profilePicture, userPrivacySettings, users } from '~/server/db/schema';
+import {
+  oauthAccount,
+  profilePicture,
+  userPrivacySettings,
+  users,
+} from '~/server/db/schema';
 
 export async function GET(req: NextRequest): Promise<Response> {
   const url = new URL(req.url);
@@ -42,18 +47,18 @@ export async function GET(req: NextRequest): Promise<Response> {
 
     const betaUser = await db.query.betaUsers.findFirst({
       where: (table, { eq }) => eq(table.email, spotifyUser.email),
-    })
+    });
 
     const profilePictureUrl =
       spotifyUser.images.find((image) => image.width === 300)?.url ??
       spotifyUser.images[0]?.url;
 
-      if (!betaUser) {
+    if (!betaUser) {
       return new NextResponse(null, {
         status: 302,
-        headers: { Location: Paths.Registration},
+        headers: { Location: Paths.Registration },
       });
-      }
+    }
 
     if (!existingUser) {
       const userId = generateId(21);
@@ -77,8 +82,13 @@ export async function GET(req: NextRequest): Promise<Response> {
       await db.insert(userPrivacySettings).values({
         id: generateId(21),
         publicProfile: true,
+        topGenres: true,
+        topTracks: true,
+        topArtists: true,
+        topAlbums: true,
+        recentlyPlayed: true,
         userId,
-      })
+      });
 
       await db.insert(oauthAccount).values({
         id: generateId(15),
@@ -99,7 +109,7 @@ export async function GET(req: NextRequest): Promise<Response> {
       );
       return new NextResponse(null, {
         status: 302,
-        headers: { Location: `/${spotifyUser.id}`},
+        headers: { Location: `/${spotifyUser.id}` },
       });
     }
 

@@ -21,13 +21,10 @@ export const generateStaticParams = async (): Promise<
 export default async function UserPage({ params }: UserPageProps) {
   const { slug } = params;
   const { session } = await validateRequest();
-  console.log('slug:', slug);
 
   const user = await db.query.users.findFirst({
     where: (table, { eq }) => eq(table.slug, slug),
   });
-
-  console.log('user dari user page:', user);
 
   if (!user) notFound();
 
@@ -35,17 +32,9 @@ export default async function UserPage({ params }: UserPageProps) {
     where: (table, { eq }) => eq(table.userId, user.id),
   });
 
-  console.log('user privacy dari user page:', userPrivacySettings);
+  if (!session && !userPrivacySettings?.publicProfile) {
+    return <PrivateDashboard />;
+  }
 
-  const isOwner = session?.userId === user.id;
-
-  return (
-    <>
-      {userPrivacySettings?.publicProfile && isOwner ? (
-        <Dashboard user={user} />
-      ) : (
-        <PrivateDashboard />
-      )}
-    </>
-  );
+  return <Dashboard user={user} settings={userPrivacySettings} />;
 }

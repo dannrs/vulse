@@ -16,12 +16,14 @@ import TopGenresSection from '~/components/dashboard/top-genres';
 import TopTracksSection from '~/components/dashboard/top-tracks';
 import { useState } from 'react';
 import { Period } from '~/types';
+import type { UserSettings } from '~/server/db/schema';
 
 interface Props {
   user: User;
+  settings: UserSettings | undefined;
 }
 
-export default function Dashboard({ user }: Props) {
+export default function Dashboard({ user, settings }: Props) {
   const [selectedPeriod, setSelectedPeriod] = useState<Period>(
     Period.SHORT_TERM
   );
@@ -34,8 +36,8 @@ export default function Dashboard({ user }: Props) {
 
   return (
     <div className='space-y-12'>
-        <ProfileSection user={user} />
-      <div className='container max-w-66 mx-auto flex justify-end'>
+      <ProfileSection user={user} />
+      <div className='container mx-auto flex max-w-66 justify-end'>
         <Select value={selectedPeriod} onValueChange={handlePeriodChange}>
           <SelectTrigger className='w-[180px]'>
             <SelectValue placeholder='Select a period' />
@@ -47,11 +49,27 @@ export default function Dashboard({ user }: Props) {
           </SelectContent>
         </Select>
       </div>
-      <TopTracksSection user={user} period={selectedPeriod} />
-      <TopArtistsSection user={user} period={selectedPeriod} />
-      <RecentlyPlayedSection user={user} />
-      <TopGenresSection user={user} period={selectedPeriod} />
-      <TopAlbumsSection user={user} period={selectedPeriod} />
+      <TopTracksSection
+        user={user}
+        settings={settings}
+        period={selectedPeriod}
+      />
+      <TopArtistsSection
+        user={user}
+        settings={settings}
+        period={selectedPeriod}
+      />
+      <RecentlyPlayedSection user={user} settings={settings} />
+      <TopGenresSection
+        user={user}
+        settings={settings}
+        period={selectedPeriod}
+      />
+      <TopAlbumsSection
+        user={user}
+        settings={settings}
+        period={selectedPeriod}
+      />
     </div>
   );
 }

@@ -1,7 +1,10 @@
 import * as z from 'zod';
 import { db } from '~/server/db';
 import { createTRPCRouter, protectedProcedure } from '../../trpc';
-import { privacySettingsSchema, profileSettingsSchema } from '~/lib/validations';
+import {
+  privacySettingsSchema,
+  profileSettingsSchema,
+} from '~/lib/validations';
 import { TRPCError } from '@trpc/server';
 import { userPrivacySettings, users } from '~/server/db/schema';
 import { and, eq } from 'drizzle-orm';
@@ -56,7 +59,12 @@ export const userRouter = createTRPCRouter({
       await db
         .update(userPrivacySettings)
         .set({
-          publicProfile: input.publicProfile
+          publicProfile: input.publicProfile,
+          topGenres: input.topGenres,
+          topTracks: input.topTracks,
+          topArtists: input.topArtists,
+          topAlbums: input.topAlbums,
+          recentlyPlayed: input.recentlyPlayed,
         })
         .where(eq(userPrivacySettings.userId, userId));
     }),

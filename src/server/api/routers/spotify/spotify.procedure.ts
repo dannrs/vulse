@@ -22,10 +22,7 @@ export const spotifyRouter = createTRPCRouter({
         where: (table, { eq }) => eq(table.userId, input.id),
       });
 
-      if (
-        userPrivacySettings?.publicProfile === false &&
-        (!ctx.session || !ctx.user)
-      ) {
+      if (!userPrivacySettings?.publicProfile && (!ctx.session || !ctx.user)) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           message: 'This profile is private',
@@ -50,7 +47,13 @@ export const spotifyRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      await getPrivateSpotifyUser(ctx, input.id);
+      const user = await getPrivateSpotifyUser(ctx, input.id);
+
+      if (!user?.topTracks && (!ctx.session || !ctx.user))
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Top tracks disabled',
+        });
 
       const spotify = await getSpotifyApi(input.id);
 
@@ -83,7 +86,13 @@ export const spotifyRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      await getPrivateSpotifyUser(ctx, input.id);
+      const user = await getPrivateSpotifyUser(ctx, input.id);
+
+      if (!user?.topArtists && (!ctx.session || !ctx.user))
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Top artists disabled',
+        });
 
       const spotify = await getSpotifyApi(input.id);
 
@@ -110,7 +119,13 @@ export const spotifyRouter = createTRPCRouter({
   getRecentlyPlayed: publicProcedure
     .input(z.object({ id: z.string(), limit: z.number() }))
     .query(async ({ ctx, input }) => {
-      await getPrivateSpotifyUser(ctx, input.id);
+      const user = await getPrivateSpotifyUser(ctx, input.id);
+
+      if (!user?.recentlyPlayed && (!ctx.session || !ctx.user))
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Recently played tracks disabled',
+        });
 
       const spotify = await getSpotifyApi(input.id);
       console.log(input.id);
@@ -143,7 +158,13 @@ export const spotifyRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      await getPrivateSpotifyUser(ctx, input.id);
+      const user = await getPrivateSpotifyUser(ctx, input.id);
+
+      if (!user?.topAlbums && (!ctx.session || !ctx.user))
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Top albums disabled',
+        });
 
       const spotify = await getSpotifyApi(input.id);
 
@@ -191,7 +212,13 @@ export const spotifyRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      await getPrivateSpotifyUser(ctx, input.id);
+      const user = await getPrivateSpotifyUser(ctx, input.id);
+
+      if (!user?.topGenres && (!ctx.session || !ctx.user))
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Top genres disabled',
+        });
 
       const spotify = await getSpotifyApi(input.id);
 

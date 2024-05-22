@@ -5,19 +5,21 @@ import { MdGridOff, MdGridOn } from 'react-icons/md';
 import { useRef, useState } from 'react';
 import { cn, getSectionDescription } from '~/lib/utils';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight, Share } from 'lucide-react';
+import { ChevronLeft, ChevronRight, EyeOff, Share } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 import type { User } from 'lucia';
 import { api } from '~/trpc/react';
 import { useSession } from '../session-provider';
 import type { Period } from '~/types';
+import type { UserSettings } from '~/server/db/schema';
 
 interface Props {
   user: User;
+  settings: UserSettings | undefined;
   period: Period;
 }
 
-export default function TopTracksSection({ user, period }: Props) {
+export default function TopTracksSection({ user, settings, period }: Props) {
   const [isGrid, setIsGrid] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   console.log('period from dashboard:', period);
@@ -39,10 +41,13 @@ export default function TopTracksSection({ user, period }: Props) {
   };
 
   const { session } = useSession();
-  const { data, isLoading } = api.spotify.getTopTracks.useQuery({
-    id: user.id,
-    period,
-  });
+  const { data, isLoading } = api.spotify.getTopTracks.useQuery(
+    {
+      id: user.id,
+      period,
+    },
+    { enabled: settings?.topTracks !== false }
+  );
 
   const topTracksDescription = getSectionDescription({
     period,
@@ -56,9 +61,11 @@ export default function TopTracksSection({ user, period }: Props) {
       <div className='flex items-center justify-between pb-4'>
         <div className='w-[85%]'>
           <h1 className='font-heading text-xl font-semibold'>Top tracks</h1>
-          <p className='max-w-[30ch] sm:max-w-[80%] lg:max-w-[95%] text-sm text-foreground/80 truncate'>{topTracksDescription}</p>
+          <p className='max-w-[30ch] truncate text-sm text-foreground/80 sm:max-w-[80%] lg:max-w-[95%]'>
+            {topTracksDescription}
+          </p>
         </div>
-        <div className='space-x-1 w-[15%] flex justify-end'>
+        <div className='flex w-[15%] justify-end space-x-1'>
           <Button onClick={toggleLayout} variant='outline' size='xs'>
             {isGrid ? (
               <MdGridOff className='h-4 w-4' aria-label='Enable grid layout' />
@@ -100,35 +107,50 @@ export default function TopTracksSection({ user, period }: Props) {
           ))}
         </div>
       ) : (
-        <div
-          ref={scrollContainerRef}
-          className={cn(
-            'gap-4 overflow-x-hidden',
-            isGrid ? 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7' : 'flex'
-          )}
-        >
-          {data?.map((track, index) => (
-            <div key={track.id} className='flex flex-col'>
-              <div className='relative h-32 w-32'>
-                <Image
-                  src={track.albumImageUrl ?? ''}
-                  alt={track.title}
-                  fill
-                  sizes='128px'
-                  className='object-cover'
-                />
-              </div>
-              <div className='pt-2'>
-                <p className='line-clamp-2 font-semibold'>
-                  {index + 1}. {track.title}
-                </p>
-                <p className='line-clamp-1 text-sm text-foreground/80'>
-                  {track.artist}
-                </p>
+        <>
+          {!settings?.topTracks && !session ? (
+            <div className='my-4 flex items-center justify-center'>
+              <div className='flex flex-col items-center gap-2'>
+                <EyeOff className='h-4 w-4' />
+                <div className='text-sm'>
+                  {user.name} doesn&apos;t share this
+                </div>
               </div>
             </div>
-          ))}
-        </div>
+          ) : (
+            <div
+              ref={scrollContainerRef}
+              className={cn(
+                'gap-4 overflow-x-hidden',
+                isGrid
+                  ? 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7'
+                  : 'flex'
+              )}
+            >
+              {data?.map((track, index) => (
+                <div key={track.id} className='flex flex-col'>
+                  <div className='relative h-32 w-32'>
+                    <Image
+                      src={track.albumImageUrl ?? ''}
+                      alt={track.title}
+                      fill
+                      sizes='128px'
+                      className='object-cover'
+                    />
+                  </div>
+                  <div className='pt-2'>
+                    <p className='line-clamp-2 font-semibold'>
+                      {index + 1}. {track.title}
+                    </p>
+                    <p className='line-clamp-1 text-sm text-foreground/80'>
+                      {track.artist}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
       )}
     </section>
   );

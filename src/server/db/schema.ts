@@ -43,6 +43,11 @@ export const userPrivacySettings = pgTable('user_settings', {
     .notNull()
     .references(() => users.id),
   publicProfile: boolean('public_profile').notNull(),
+  topGenres: boolean('top_genres').notNull(),
+  topTracks: boolean('top_tracks').notNull(),
+  topArtists: boolean('top_artists').notNull(),
+  topAlbums: boolean('top_albums').notNull(),
+  recentlyPlayed: boolean('recently_played').notNull(),
 });
 
 // export const userRelations = relations(users, ({ one }) => ({
@@ -98,4 +103,5 @@ export const sessions = pgTable(
 );
 
 export type User = typeof users.$inferSelect;
+export type UserSettings = typeof userPrivacySettings.$inferSelect;
 export type NewUser = typeof users.$inferInsert;

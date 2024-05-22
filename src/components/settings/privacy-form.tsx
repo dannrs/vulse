@@ -27,6 +27,11 @@ export function PrivacySettingsForm() {
     resolver: zodResolver(privacySettingsSchema),
     defaultValues: {
       publicProfile: undefined,
+      topGenres: undefined,
+      topTracks: undefined,
+      topArtists: undefined,
+      topAlbums: undefined,
+      recentlyPlayed: undefined,
     },
   });
 
@@ -34,6 +39,11 @@ export function PrivacySettingsForm() {
     if (!isLoading && userPrivacySettings) {
       form.reset({
         publicProfile: userPrivacySettings.publicProfile,
+        topGenres: userPrivacySettings.topGenres,
+        topTracks: userPrivacySettings.topTracks,
+        topArtists: userPrivacySettings.topArtists,
+        topAlbums: userPrivacySettings.topAlbums,
+        recentlyPlayed: userPrivacySettings.recentlyPlayed,
       });
     }
   }, [userPrivacySettings, isLoading, form]);
@@ -46,8 +56,8 @@ export function PrivacySettingsForm() {
           .then(() => {
             toast.success('Profile updated');
           })
-          .catch(() => {
-            toast.error('Something went wrong. Please try again!');
+          .catch((e) => {
+            console.log(e);
           });
       },
       onError: () => {
@@ -56,7 +66,6 @@ export function PrivacySettingsForm() {
     });
 
   function onSubmit(data: z.infer<typeof privacySettingsSchema>) {
-    console.log(data);
     updatePrivacySettings(data);
   }
 
@@ -86,6 +95,106 @@ export function PrivacySettingsForm() {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name='topGenres'
+              render={({ field }) => (
+                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
+                  <div className='space-y-0.5'>
+                    <FormLabel className='text-base'>Top Genres</FormLabel>
+                    <FormDescription>
+                      Hide top genres from your profile
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='topTracks'
+              render={({ field }) => (
+                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
+                  <div className='space-y-0.5'>
+                    <FormLabel className='text-base'>Top Tracks</FormLabel>
+                    <FormDescription>
+                      Hide top tracks from your profile
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='topArtists'
+              render={({ field }) => (
+                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
+                  <div className='space-y-0.5'>
+                    <FormLabel className='text-base'>Top Artists</FormLabel>
+                    <FormDescription>
+                      Hide top artists from your profile
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='topAlbums'
+              render={({ field }) => (
+                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
+                  <div className='space-y-0.5'>
+                    <FormLabel className='text-base'>Top Albums</FormLabel>
+                    <FormDescription>
+                      Hide top albums from your profile
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='recentlyPlayed'
+              render={({ field }) => (
+                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
+                  <div className='space-y-0.5'>
+                    <FormLabel className='text-base'>Recently Played</FormLabel>
+                    <FormDescription>
+                      Hide recently played tracks from your profile
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
           </div>
         </div>
         <Button
@@ -98,4 +207,3 @@ export function PrivacySettingsForm() {
     </Form>
   );
 }
-
