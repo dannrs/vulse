@@ -202,7 +202,14 @@ export const spotifyRouter = createTRPCRouter({
         >
       );
 
-      return albums;
+      const sortedAlbums = Object.entries(albums)
+        .map(([albumName, details]) => ({
+          albumName,
+          details,
+        }))
+        .sort((a, b) => b.details.count - a.details.count);
+
+      return sortedAlbums;
     }),
   getTopGenres: publicProcedure
     .input(

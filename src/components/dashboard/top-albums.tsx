@@ -126,28 +126,27 @@ export default function TopAlbumsSection({ user, settings, period }: Props) {
                   : 'flex'
               )}
             >
-              {data &&
-                Object.entries(data).map(([albumName, albumInfo], index) => (
-                  <div key={index} className='flex flex-col'>
-                    <div className='relative h-32 w-32'>
-                      <Image
-                        src={albumInfo.imageUrl ?? ''}
-                        alt={albumName}
-                        fill
-                        sizes='128px'
-                        className='object-cover'
-                      />
-                    </div>
-                    <div className='pt-2'>
-                      <p className='line-clamp-2 font-semibold'>
-                        {index + 1}. {albumName}
-                      </p>
-                      <p className='line-clamp-1 text-sm text-foreground/80'>
-                        {albumInfo.artist}
-                      </p>
-                    </div>
+              {data?.map(({ albumName, details }, index) => (
+                <li key={index} className='flex flex-col'>
+                  <div className='relative h-32 w-32'>
+                    <Image
+                      src={details.imageUrl ?? ''}
+                      alt={albumName}
+                      fill
+                      sizes='128px'
+                      className='object-cover'
+                    />
                   </div>
-                ))}
+                  <div className='pt-2'>
+                    <p className='line-clamp-2 font-semibold'>
+                      {index + 1}. {albumName}
+                    </p>
+                    <p className='line-clamp-1 text-sm text-foreground/80'>
+                      {details.artist}
+                    </p>
+                  </div>
+                </li>
+              ))}
             </div>
           )}
         </>
