@@ -6,7 +6,13 @@ import {
   profileSettingsSchema,
 } from '~/lib/validations';
 import { TRPCError } from '@trpc/server';
-import { userPrivacySettings, users } from '~/server/db/schema';
+import {
+  oauthAccount,
+  profilePicture,
+  sessions,
+  userPrivacySettings,
+  users,
+} from '~/server/db/schema';
 import { and, eq } from 'drizzle-orm';
 
 export const userRouter = createTRPCRouter({
@@ -44,6 +50,27 @@ export const userRouter = createTRPCRouter({
         })
         .where(and(eq(users.id, userId), eq(users.spotifyId, spotifyId)));
     }),
+  deleteUser: protectedProcedure.mutation(async ({ ctx }) => {
+    const userId = ctx.user.id;
+
+    try {
+      await db.delete(oauthAccount).where(eq(oauthAccount.userId, userId));
+      await db.delete(profilePicture).where(eq(profilePicture.userId, userId));
+      await db.delete(sessions).where(eq(sessions.userId, userId));
+      await db
+        .delete(userPrivacySettings)
+        .where(eq(userPrivacySettings.userId, userId));
+      await db.delete(users).where(eq(users.id, userId));
+
+      return { success: true };
+    } catch (error) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to delete user account',
+        cause: error,
+      });
+    }
+  }),
   getUserPrivacySettings: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.user.id;
 
