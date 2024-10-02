@@ -26,7 +26,7 @@ export const lucia = new Lucia(adapter, {
 export const spotify = new Spotify(
   env.SPOTIFY_CLIENT_ID,
   env.SPOTIFY_CLIENT_SECRET,
-  absoluteUrl('/auth/login/spotify/callback')
+  absoluteUrl('/login/spotify/callback')
 );
 
 declare module 'lucia' {

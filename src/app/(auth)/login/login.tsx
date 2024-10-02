@@ -18,10 +18,17 @@ export function Login() {
   const [isLoading, setIsLoading] = useState(false);
   return (
     <Card className='w-full max-w-md'>
-      <CardHeader className='text-center space-y-2'>
+      <CardHeader className='space-y-2 text-center'>
         <CardTitle>{APP_TITLE} Login</CardTitle>
-        <CardDescription className='bg-accent p-3 rounded-md'>
-        Before logging in, please make sure you have <Link href={Paths.Registration} className='font-semibold underline underline-offset-4'>registered here</Link>.
+        <CardDescription className='rounded-md bg-accent p-3'>
+          Before logging in, please make sure you have{' '}
+          <Link
+            href={Paths.Registration}
+            className='font-semibold underline underline-offset-4'
+          >
+            registered here
+          </Link>
+          .
         </CardDescription>
       </CardHeader>
       <CardContent className='flex flex-col gap-4'>
@@ -31,7 +38,7 @@ export function Login() {
           onClick={() => setIsLoading(true)}
           disabled={isLoading}
         >
-          <Link href='/auth/login/spotify'>
+          <Link href='/login/spotify'>
             {isLoading ? (
               <>
                 <LoaderCircle className='mr-2 h-4 w-4 animate-spin' />
