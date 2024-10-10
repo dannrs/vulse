@@ -13,7 +13,6 @@ import { Skeleton } from './ui/skeleton';
 import Link from 'next/link';
 import { LogOut, Settings, UserRound } from 'lucide-react';
 import { logout } from '~/lib/auth/actions';
-import { Button } from './ui/button';
 
 export default function UserButton() {
   const { data: profile, isLoading } = api.user.getUserById.useQuery();
@@ -58,15 +57,10 @@ export default function UserButton() {
         <DropdownMenuSeparator />
         <DropdownMenuItem className='px-5'>
           <form action={logout}>
-            <Button
-              className='flex items-center gap-2 font-normal'
-              size='xs'
-              variant='ghost'
-              type='submit'
-            >
+            <button className='flex items-center gap-2 p-1' type='submit'>
               <LogOut className='mr-2 h-3.5 w-3.5 text-foreground/70' />
               Sign out
-            </Button>
+            </button>
           </form>
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -13,8 +13,7 @@ export const env = createEnv({
       .default('development'),
     SPOTIFY_CLIENT_ID: z.string().trim().min(1),
     SPOTIFY_CLIENT_SECRET: z.string().trim().min(1),
-    UPLOADTHING_SECRET: z.string().trim().min(1),
-    UPLOADTHING_APP_ID: z.string().trim().min(1),
+    UPLOADTHING_TOKEN: z.string().trim().min(1),
     RESEND_API_KEY: z.string().trim().min(1),
   },
 
@@ -38,8 +37,7 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
     SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
-    UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
-    UPLOADTHING_APP_ID: process.env.UPLOADTHING_APP_ID,
+    UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     // Client-side env vars
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,

@@ -19,7 +19,7 @@ export function Login() {
   return (
     <Card className='w-full max-w-md'>
       <CardHeader className='space-y-2 text-center'>
-        <CardTitle>{APP_TITLE} Login</CardTitle>
+        <CardTitle className='mb-2'>{APP_TITLE} Login</CardTitle>
         <CardDescription className='rounded-md bg-accent p-3'>
           Before logging in, please make sure you have{' '}
           <Link
