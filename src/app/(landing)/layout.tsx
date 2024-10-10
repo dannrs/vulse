@@ -7,12 +7,12 @@ export default function LandingPageLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <div className='flex min-h-svh flex-col'>
       <Navbar />
-      {children}
-      <div className='border-t'>
-        <Footer />
-      </div>
-    </>
+      <main className='flex flex-grow items-center justify-center'>
+        {children}
+      </main>
+      <Footer />
+    </div>
   );
 }
