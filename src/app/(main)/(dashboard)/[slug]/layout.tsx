@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation';
-import Dashboard from '~/components/dashboard';
+import ProfileSection from '~/components/dashboard/profile';
 import { db } from '~/server/db';
 
 interface Props {
+  children: React.ReactNode;
   params: {
     slug: string;
   };
@@ -14,7 +15,7 @@ export const generateStaticParams = async (): Promise<Props['params'][]> => {
   return users.map((user) => ({ slug: user.slug ?? '' }));
 };
 
-export default async function UserPage({ params }: Props) {
+export default async function DashboardPageLayout({ children, params }: Props) {
   const { slug } = params;
 
   const user = await db.query.users.findFirst({
@@ -23,9 +24,10 @@ export default async function UserPage({ params }: Props) {
 
   if (!user) notFound();
 
-  const userPrivacySettings = await db.query.userPrivacySettings.findFirst({
-    where: (table, { eq }) => eq(table.userId, user.id),
-  });
-
-  return <Dashboard user={user} settings={userPrivacySettings} />;
+  return (
+    <>
+      <ProfileSection user={user} />
+      {children}
+    </>
+  );
 }

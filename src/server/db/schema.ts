@@ -47,6 +47,7 @@ export const userPrivacySettings = pgTable('user_settings', {
   topTracks: boolean('top_tracks').notNull(),
   topArtists: boolean('top_artists').notNull(),
   topAlbums: boolean('top_albums').notNull(),
+  currentlyPlaying: boolean('currently_playing').notNull(),
   recentlyPlayed: boolean('recently_played').notNull(),
 });
 

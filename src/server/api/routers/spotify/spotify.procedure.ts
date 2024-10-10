@@ -3,7 +3,7 @@ import { createTRPCRouter, publicProcedure } from '../../trpc';
 import { getSpotifyApi } from '~/lib/spotify';
 import { TRPCError } from '@trpc/server';
 import { db } from '~/server/db';
-import type { MaxInt } from '@spotify/web-api-ts-sdk';
+import type { MaxInt, Track } from '@spotify/web-api-ts-sdk';
 import { getPrivateSpotifyUser } from '~/lib/spotify';
 
 export const spotifyRouter = createTRPCRouter({
@@ -71,8 +71,10 @@ export const spotifyRouter = createTRPCRouter({
           id: track.id,
           title: track.name,
           artist: track.artists.map((artist) => artist.name).join(', '),
+          album: track.album.name,
           albumImageUrl: track.album.images[0]?.url,
           songUrl: track.external_urls.spotify,
+          previewUrl: track.preview_url,
         };
       });
 
@@ -105,12 +107,17 @@ export const spotifyRouter = createTRPCRouter({
       );
       const { items } = data;
 
-      const artists = items.map((artist) => {
+      const artistDetails = await Promise.all(
+        items.map((artist) => spotify.artists.get(artist.id))
+      );
+
+      const artists = items.map((artist, index) => {
         return {
           id: artist.id,
           name: artist.name,
           imageUrl: artist.images[0]?.url,
           url: artist.external_urls.spotify,
+          followers: artistDetails[index]?.followers.total,
         };
       });
 
@@ -179,8 +186,10 @@ export const spotifyRouter = createTRPCRouter({
 
       const albums = items.reduce(
         (acc, track) => {
+          const albumId = track.album.id;
           const albumName = track.album.name;
           const albumImage = track.album.images[0]?.url ?? '';
+          const albumUrl = track.album.external_urls.spotify;
           const artistName = track.artists
             .map((artist) => artist.name)
             .join(', ');
@@ -189,16 +198,24 @@ export const spotifyRouter = createTRPCRouter({
             (acc[albumName] as { count: number }).count++;
           } else {
             acc[albumName] = {
-              count: 1,
+              id: albumId,
+              url: albumUrl,
               imageUrl: albumImage,
               artist: artistName,
+              count: 1,
             };
           }
           return acc;
         },
         {} as Record<
           string,
-          { count: number; imageUrl: string; artist: string }
+          {
+            id: string;
+            url: string;
+            imageUrl: string;
+            artist: string;
+            count: number;
+          }
         >
       );
 
@@ -210,6 +227,49 @@ export const spotifyRouter = createTRPCRouter({
         .sort((a, b) => b.details.count - a.details.count);
 
       return sortedAlbums;
+    }),
+  getCurrentlyPlaying: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const user = await getPrivateSpotifyUser(ctx, input.id);
+
+      if (!user?.currentlyPlaying && (!ctx.session || !ctx.user))
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Currently playing disabled',
+        });
+
+      const spotify = await getSpotifyApi(input.id);
+
+      if (!spotify) throw new TRPCError({ code: 'UNAUTHORIZED' });
+
+      const data = await spotify.player.getCurrentlyPlayingTrack();
+
+      if (data === null) {
+        return {
+          id: '',
+          title: '',
+          artist: '',
+          album: '',
+          albumImageUrl: '',
+          songUrl: '',
+          isPlaying: false,
+        };
+      }
+
+      const item = data.item as Track;
+
+      const track = {
+        id: item.id,
+        title: item.name,
+        artist: item.artists.map((artist) => artist.name).join(', '),
+        album: item.album.name,
+        albumImageUrl: item.album.images[0]?.url,
+        songUrl: item.external_urls.spotify,
+        isPlaying: data.is_playing,
+      };
+
+      return track;
     }),
   getTopGenres: publicProcedure
     .input(

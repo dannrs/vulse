@@ -86,6 +86,7 @@ export async function GET(req: NextRequest): Promise<Response> {
         topTracks: true,
         topArtists: true,
         topAlbums: true,
+        currentlyPlaying: true,
         recentlyPlayed: true,
         userId,
       });

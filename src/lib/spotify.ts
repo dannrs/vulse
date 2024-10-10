@@ -4,7 +4,7 @@ import { spotify } from './auth';
 import { oauthAccount } from '~/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { env } from '~/env';
-import { TRPCContext } from '~/server/api/trpc';
+import type { TRPCContext } from '~/server/api/trpc';
 import { TRPCError } from '@trpc/server';
 
 export async function getSpotifyApi(userId: string) {

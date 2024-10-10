@@ -1,12 +1,15 @@
 import { EyeOff } from 'lucide-react';
+import { Card, CardContent } from '../ui/card';
 
 export default function PrivateDashboard() {
   return (
-    <section className='my-20 flex items-center justify-center'>
-      <div className='flex flex-col items-center gap-2'>
-        <EyeOff className='h-5 w-5' />
-        <div>This profile is private</div>
-      </div>
+    <section className='container my-12 max-w-2xl'>
+      <Card className='flex h-48 items-center justify-center'>
+        <CardContent className='p-0'>
+          <EyeOff className='mr-2 inline h-5 w-5' />
+          <span>This profile is private</span>
+        </CardContent>
+      </Card>
     </section>
   );
 }

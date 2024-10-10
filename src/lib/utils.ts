@@ -3,9 +3,6 @@ import type { Session, User } from 'lucia';
 import { twMerge } from 'tailwind-merge';
 import { env } from '~/env';
 import { Period } from '~/types';
-import { TRPCError } from '@trpc/server';
-import { db } from '~/server/db';
-import { type TRPCContext } from '~/server/api/trpc';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -52,7 +49,7 @@ export function getSectionDescription({
 }) {
   const periodDescription =
     period === Period.LONG_TERM
-      ? 'lifetime'
+      ? '1 year'
       : `from the past ${period === Period.SHORT_TERM ? '4 weeks' : '6 months'}`;
   const userDescription = session ? 'Your' : `${user.name}'s`;
   const sectionDescription =
@@ -68,4 +65,27 @@ export const formatGenre = (genre: string) => {
     .split('-')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join('-');
+};
+
+export function formatNumber(num: number): string {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + 'M';
+  } else if (num >= 1000) {
+    return (num / 1000).toFixed(1) + 'K';
+  } else {
+    return num.toString();
+  }
+}
+
+export const capitalizeWords = (str: string) => {
+  // First, split camelCase
+  const words = str
+    .replace(/([A-Z])/g, ' $1')
+    .trim()
+    .split(' ');
+
+  // Then capitalize each word
+  return words
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
 };
