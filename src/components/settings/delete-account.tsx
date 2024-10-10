@@ -15,6 +15,13 @@ import { toast } from 'sonner';
 import { api } from '~/trpc/react';
 import { Button } from '../ui/button';
 import { useSession } from '../session-provider';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../ui/card';
 
 export default function DeleteAccount() {
   const router = useRouter();
@@ -39,41 +46,45 @@ export default function DeleteAccount() {
   };
 
   return (
-    <div className='my-12 w-full space-y-2'>
-      <h2 className='text-lg font-semibold'>Danger Zone</h2>
-      <div className='space-y-2 rounded-md border border-destructive p-4'>
-        <h3 className='font-semibold'>Delete Account</h3>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat cumque
-          commodi asperiores ducimus reprehenderit eos nostrum, enim voluptates
-          facilis dignissimos recusandae repellat qui dicta quo nisi aut
-          quibusdam ab culpa.
-        </p>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant='destructive'>Delete</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Are you absolutely sure?</DialogTitle>
-              <DialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <Button type='submit' onClick={handleDeleteAccount}>
-                Yes
-              </Button>
-              <DialogClose asChild>
-                <Button type='button' variant='secondary'>
-                  Cancel
+    <Card className='my-8 w-full border-destructive'>
+      <CardHeader>
+        <CardTitle>Danger Zone</CardTitle>
+        <CardDescription>Delete your account permanently</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className='space-y-2'>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat
+            cumque commodi asperiores ducimus reprehenderit eos nostrum, enim
+            voluptates facilis dignissimos recusandae repellat qui dicta quo
+            nisi aut quibusdam ab culpa.
+          </p>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant='destructive'>Delete</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you absolutely sure?</DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your account and remove your data from our servers.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button type='submit' onClick={handleDeleteAccount}>
+                  Yes
                 </Button>
-              </DialogClose>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
-    </div>
+                <DialogClose asChild>
+                  <Button type='button' variant='secondary'>
+                    Cancel
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

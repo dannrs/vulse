@@ -21,6 +21,7 @@ import {
 } from './ui/form';
 import { Input } from './ui/input';
 import { Skeleton } from './ui/skeleton';
+import { Card, CardContent } from './ui/card';
 
 export default function SettingsForm() {
   const utils = api.useUtils();
@@ -133,124 +134,130 @@ export default function SettingsForm() {
           </div>
         ) : (
           <>
-            {profilePicture?.url ? (
-              <div className='group relative mx-auto my-2 h-[150px] w-[150px] cursor-pointer'>
-                <Image
-                  src={profilePicture.url}
-                  alt='Profile picture'
-                  width={150}
-                  height={150}
-                  className='aspect-square rounded-full transition-opacity duration-200 group-hover:opacity-60'
-                  onClick={onImageClick}
-                />
-                <p className='absolute inset-0 flex items-center justify-center text-sm font-medium opacity-0 transition-opacity duration-200 group-hover:opacity-100'>
-                  Change
-                </p>
-                <Input
-                  type='file'
-                  accept='image/*'
-                  className='hidden'
-                  onChange={onFileChange}
-                  ref={fileInputRef}
-                />
-              </div>
-            ) : (
-              <></>
-            )}
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className='mt-6 space-y-3'
-              >
-                <FormField
-                  control={form.control}
-                  name='displayName'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Display Name</FormLabel>
-                      <FormControl>
-                        <Input {...field} maxLength={12} />
-                      </FormControl>
-                      <div className='relative flex items-center'>
-                        <FormMessage />
-                        <p className='absolute right-0 pt-2 text-xs text-foreground/70'>
-                          {field.value.length}/12
-                        </p>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name='slug'
-                  render={({ field, fieldState: { error } }) => (
-                    <FormItem>
-                      <div className='flex items-center'>
-                        <FormLabel>Custom URL</FormLabel>
-                        <div>
-                          {!error && (
-                            <div className='flex items-center'>
-                              <Dot className='inline' />
-                              {isCheckingSlug ? (
-                                <p className='text-sm font-medium'>
-                                  Checking...
-                                </p>
-                              ) : isSlugAvailable ? (
-                                <p className='text-sm font-medium text-primary'>
-                                  Available!
-                                </p>
-                              ) : (
-                                <p className='text-sm font-medium text-destructive'>
-                                  Unavailable!
-                                </p>
+            <Card>
+              <CardContent>
+                {profilePicture?.url ? (
+                  <div
+                    className='group relative mx-auto my-4 h-[150px] w-[150px] cursor-pointer'
+                    onClick={onImageClick}
+                  >
+                    <Image
+                      src={profilePicture.url}
+                      alt='Profile picture'
+                      width={150}
+                      height={150}
+                      className='aspect-square rounded-full object-cover transition-opacity duration-200 group-hover:opacity-60'
+                    />
+                    <p className='absolute inset-0 flex items-center justify-center text-sm font-medium opacity-0 transition-opacity duration-200 group-hover:opacity-100'>
+                      Change
+                    </p>
+                    <Input
+                      type='file'
+                      accept='image/*'
+                      className='hidden'
+                      onChange={onFileChange}
+                      ref={fileInputRef}
+                    />
+                  </div>
+                ) : (
+                  <></>
+                )}
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className='mt-6 space-y-3'
+                  >
+                    <FormField
+                      control={form.control}
+                      name='displayName'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Display Name</FormLabel>
+                          <FormControl>
+                            <Input {...field} maxLength={12} />
+                          </FormControl>
+                          <div className='relative flex items-center'>
+                            <FormMessage />
+                            <p className='absolute right-0 pt-2 text-xs text-foreground/70'>
+                              {field.value.length}/12
+                            </p>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name='slug'
+                      render={({ field, fieldState: { error } }) => (
+                        <FormItem>
+                          <div className='flex items-center'>
+                            <FormLabel>Custom URL</FormLabel>
+                            <div>
+                              {!error && (
+                                <div className='flex items-center'>
+                                  <Dot className='inline' />
+                                  {isCheckingSlug ? (
+                                    <p className='text-sm font-medium'>
+                                      Checking...
+                                    </p>
+                                  ) : isSlugAvailable ? (
+                                    <p className='text-sm font-medium text-primary'>
+                                      Available!
+                                    </p>
+                                  ) : (
+                                    <p className='text-sm font-medium text-destructive'>
+                                      Unavailable!
+                                    </p>
+                                  )}
+                                </div>
                               )}
                             </div>
-                          )}
-                        </div>
-                      </div>
-                      <FormControl>
-                        <Input {...field} maxLength={30} />
-                      </FormControl>
-                      <div className='relative flex items-center'>
-                        <FormMessage />
-                        <p className='absolute right-0 pt-2 text-xs text-foreground/70'>
-                          {field.value.length}/30
-                        </p>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name='description'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Input {...field} maxLength={120} />
-                      </FormControl>
-                      <div className='relative flex items-center'>
-                        <FormMessage />
-                        <p className='absolute right-0 pt-2 text-xs text-foreground/70'>
-                          {field.value?.length}/120
-                        </p>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                <Button
-                  disabled={
-                    !isSlugAvailable ||
-                    !form.formState.isValid ||
-                    form.formState.isSubmitting ||
-                    !form.formState.isDirty
-                  }
-                  type='submit'
-                >
-                  Save
-                </Button>
-              </form>
-            </Form>
+                          </div>
+                          <FormControl>
+                            <Input {...field} maxLength={30} />
+                          </FormControl>
+                          <div className='relative flex items-center'>
+                            <FormMessage />
+                            <p className='absolute right-0 pt-2 text-xs text-foreground/70'>
+                              {field.value.length}/30
+                            </p>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name='description'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Description</FormLabel>
+                          <FormControl>
+                            <Input {...field} maxLength={120} />
+                          </FormControl>
+                          <div className='relative flex items-center'>
+                            <FormMessage />
+                            <p className='absolute right-0 pt-2 text-xs text-foreground/70'>
+                              {field.value?.length}/120
+                            </p>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      disabled={
+                        !isSlugAvailable ||
+                        !form.formState.isValid ||
+                        form.formState.isSubmitting ||
+                        !form.formState.isDirty
+                      }
+                      type='submit'
+                    >
+                      Save
+                    </Button>
+                  </form>
+                </Form>
+              </CardContent>
+            </Card>
           </>
         )}
       </div>

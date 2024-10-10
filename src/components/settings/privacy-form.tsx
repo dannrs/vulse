@@ -17,6 +17,7 @@ import { Switch } from '~/components/ui/switch';
 import { privacySettingsSchema } from '~/lib/validations';
 import { api } from '~/trpc/react';
 import { useEffect } from 'react';
+import { Card, CardContent } from '../ui/card';
 
 export function PrivacySettingsForm() {
   const utils = api.useUtils();
@@ -70,140 +71,151 @@ export function PrivacySettingsForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='w-full space-y-6'>
-        <div>
-          <div className='space-y-4'>
-            <FormField
-              control={form.control}
-              name='publicProfile'
-              render={({ field }) => (
-                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
-                  <div className='space-y-0.5'>
-                    <FormLabel className='text-base'>Public profile</FormLabel>
-                    <FormDescription>
-                      Whether the profile is accessible by others. Turn off to
-                      make this profile private.
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='topGenres'
-              render={({ field }) => (
-                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
-                  <div className='space-y-0.5'>
-                    <FormLabel className='text-base'>Top Genres</FormLabel>
-                    <FormDescription>
-                      Hide top genres from your profile
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='topTracks'
-              render={({ field }) => (
-                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
-                  <div className='space-y-0.5'>
-                    <FormLabel className='text-base'>Top Tracks</FormLabel>
-                    <FormDescription>
-                      Hide top tracks from your profile
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='topArtists'
-              render={({ field }) => (
-                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
-                  <div className='space-y-0.5'>
-                    <FormLabel className='text-base'>Top Artists</FormLabel>
-                    <FormDescription>
-                      Hide top artists from your profile
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='topAlbums'
-              render={({ field }) => (
-                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
-                  <div className='space-y-0.5'>
-                    <FormLabel className='text-base'>Top Albums</FormLabel>
-                    <FormDescription>
-                      Hide top albums from your profile
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='recentlyPlayed'
-              render={({ field }) => (
-                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
-                  <div className='space-y-0.5'>
-                    <FormLabel className='text-base'>Recently Played</FormLabel>
-                    <FormDescription>
-                      Hide recently played tracks from your profile
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
-        <Button
-          disabled={form.formState.isSubmitting || !form.formState.isDirty}
-          type='submit'
-        >
-          Save
-        </Button>
-      </form>
-    </Form>
+    <Card className='my-4'>
+      <CardContent className='py-6'>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='w-full space-y-6'
+          >
+            <div>
+              <div className='space-y-6'>
+                <FormField
+                  control={form.control}
+                  name='publicProfile'
+                  render={({ field }) => (
+                    <FormItem className='flex flex-row items-center justify-between'>
+                      <div className='space-y-0.5'>
+                        <FormLabel className='text-base'>
+                          Public profile
+                        </FormLabel>
+                        <FormDescription>
+                          Whether the profile is accessible by others. Turn off
+                          to make this profile private.
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='topGenres'
+                  render={({ field }) => (
+                    <FormItem className='flex flex-row items-center justify-between '>
+                      <div className='space-y-0.5'>
+                        <FormLabel className='text-base'>Top Genres</FormLabel>
+                        <FormDescription>
+                          Hide top genres from your profile
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='topTracks'
+                  render={({ field }) => (
+                    <FormItem className='flex flex-row items-center justify-between '>
+                      <div className='space-y-0.5'>
+                        <FormLabel className='text-base'>Top Tracks</FormLabel>
+                        <FormDescription>
+                          Hide top tracks from your profile
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='topArtists'
+                  render={({ field }) => (
+                    <FormItem className='flex flex-row items-center justify-between '>
+                      <div className='space-y-0.5'>
+                        <FormLabel className='text-base'>Top Artists</FormLabel>
+                        <FormDescription>
+                          Hide top artists from your profile
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='topAlbums'
+                  render={({ field }) => (
+                    <FormItem className='flex flex-row items-center justify-between '>
+                      <div className='space-y-0.5'>
+                        <FormLabel className='text-base'>Top Albums</FormLabel>
+                        <FormDescription>
+                          Hide top albums from your profile
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='recentlyPlayed'
+                  render={({ field }) => (
+                    <FormItem className='flex flex-row items-center justify-between'>
+                      <div className='space-y-0.5'>
+                        <FormLabel className='text-base'>
+                          Recently Played
+                        </FormLabel>
+                        <FormDescription>
+                          Hide recently played tracks from your profile
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+            <Button
+              disabled={form.formState.isSubmitting || !form.formState.isDirty}
+              type='submit'
+            >
+              Save
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }
