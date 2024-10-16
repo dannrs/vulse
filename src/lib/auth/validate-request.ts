@@ -29,11 +29,10 @@ export const uncachedValidateRequest = async (): Promise<
         sessionCookie.attributes
       );
     }
-  } catch {
-    console.error('Failed to set session cookie');
+  } catch (error) {
+    console.error('Failed to set session cookie', error);
   }
   return result;
 };
 
 export const validateRequest = cache(uncachedValidateRequest);
-

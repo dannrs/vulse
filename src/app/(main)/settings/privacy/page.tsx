@@ -1,7 +1,12 @@
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { PrivacySettingsForm } from '~/components/settings/privacy-form';
 import { validateRequest } from '~/lib/auth/validate-request';
 import { Paths } from '~/lib/constants';
+
+export const metadata: Metadata = {
+  title: 'Privacy Settings',
+};
 
 export default async function PrivacySettingsPage() {
   const { user } = await validateRequest();

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import SettingsForm from '~/components/settings-form';
 import DeleteAccount from '~/components/settings/delete-account';
@@ -5,6 +6,10 @@ import { PrivacySettingsForm } from '~/components/settings/privacy-form';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
 import { validateRequest } from '~/lib/auth/validate-request';
 import { Paths } from '~/lib/constants';
+
+export const metadata: Metadata = {
+  title: 'Profile Settings',
+};
 
 export default async function SettingsPage() {
   const { user } = await validateRequest();

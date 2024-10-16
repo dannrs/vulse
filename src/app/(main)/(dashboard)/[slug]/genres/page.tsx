@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import DashboardDropdown from '~/components/dashboard/dashboard-dropdown';
 import PrivateDashboard from '~/components/dashboard/private-dashboard';
@@ -10,6 +11,10 @@ interface Props {
     slug: string;
   };
 }
+
+export const metadata: Metadata = {
+  title: 'Top Genres',
+};
 
 export const generateStaticParams = async (): Promise<Props['params'][]> => {
   const users = await db.query.users.findMany();
