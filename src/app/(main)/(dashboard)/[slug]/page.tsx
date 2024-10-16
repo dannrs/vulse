@@ -9,9 +9,23 @@ interface Props {
   };
 }
 
-export const metadata: Metadata = {
-  title: 'Dashboard',
-};
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = params;
+
+  const user = await db.query.users.findFirst({
+    where: (table, { eq }) => eq(table.slug, slug),
+  });
+
+  if (!user) {
+    return {
+      title: 'User Not Found',
+    };
+  }
+
+  return {
+    title: `@${user.name}`,
+  };
+}
 
 export const generateStaticParams = async (): Promise<Props['params'][]> => {
   const users = await db.query.users.findMany();
